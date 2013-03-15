@@ -1,0 +1,185 @@
+# index start from 1
+set -g base-index 1
+
+# 256 color
+set -g default-terminal "xterm-256color"
+
+################################################################
+# Key bindings
+################################################################
+
+# prefix key
+unbind C-b
+set -g prefix ^O
+bind o send-prefix
+
+# screen-like
+bind ^C new-window
+bind ^D detach-client
+bind ^K confirm-before -p "kill-window #S? (y/n)" kill-window
+bind ^L last-window
+
+
+# easily toggle synchronization (mnemonic: e is for echo)
+bind e setw synchronize-panes
+
+
+# reload conf
+#unbind l
+#bind l source ~/.tmux.conf
+
+# quit
+bind-key q confirm-before kill-server
+
+# choose window/session
+bind-key "'" choose-window
+bind-key '"' choose-session
+
+# displays
+bind-key * list-clients
+
+
+#---------------------------------
+# window
+#---------------------------------
+# rotate
+bind ^R rotate-window -D
+
+# split
+unbind '"' # unbind horizontal split
+unbind %   # unbind vertical split
+bind | split-window -h
+bind _ split-window -v
+
+# navigate windows using hl, and ctrl-hl (no prefix)
+bind-key -r h select-window -t :-
+bind-key -r l select-window -t :+
+
+bind-key -nr M-Left select-window -t :-
+bind-key -nr M-Right select-window -t :+
+
+#---------------------------------
+# pane
+#---------------------------------
+# navigate panes using jk, and ctrl+jk (no prefix)
+bind-key -r j select-pane -t :.-
+bind-key -r k select-pane -t :.+
+
+# Ctrl-Up/Down cyles thru panes (no prefix)
+bind-key -nr M-Up   select-pane -t :.-
+bind-key -nr M-Down select-pane -t :.+
+
+# Cycle to next pane
+bind-key -r Tab select-pane -t :.+
+
+# resize pane with arrow keys
+unbind Left
+unbind Right
+unbind Down
+unbind Up
+bind -r Left resize-pane -L 2
+bind -r Right resize-pane -R 2
+bind -r Down resize-pane -D 2
+bind -r Up resize-pane -U 2
+
+
+
+# pane movement opposite to break-pane, window -> pane
+#bind-key j command-prompt -p "join pane from:"  "join-pane -s '%%'"
+bind-key s command-prompt -p "send pane to:"  "join-pane -t '%%'"
+
+# break a pane to its own window, pane -> window
+bind-key b break-pane
+
+# window layouts (emacs-like)
+#bind-key 1 break-pane
+#bind-key 2 select-layout even-vertical
+#bind-key 3 select-layout even-horizontal
+#bind-key o select-pane -U
+
+
+################################################################
+# End of Bind-Keys
+################################################################
+
+# Allows for faster key repetition
+set -g repeat-time 500
+
+# Set window notifications
+setw -g monitor-activity on
+set -g visual-activity on
+
+# Automatically set window title
+setw -g automatic-rename on
+
+setw -g aggressive-resize on
+set -g history-limit 100000
+
+
+# scrolling with terminal scroll bar
+set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+
+
+# status line
+set -g status-left " "
+# set -g status-right "#[fg=white,bg=black] [#S]#[fg=red,bright] [ #[fg=cyan]#H #[fg=red,bright]] #[fg=yellow,bright]%Y.%m.%d #[fg=green]%H:%M #[default]#[fg=magenta,bright]#[default]  "
+set -g status-right "#[fg=white,bg=black] [#S]#[fg=red,bright] [ #[fg=cyan]#H #[fg=red,bright]] #[fg=yellow,bright]%Y.%m.%d #[default]  "
+set -g status-right-length 100
+setw -g window-status-current-format " [#I#F] #W "
+setw -g window-status-format "[#I#F#W]"
+
+# Append ENV VARs to be copied into the session
+set -ga update-environment " DBUS_SESSION_BUS_ADDRESS GNOME_KEYRING_CONTROL GPG_AGENT_INFO KRB5CCNAME"
+
+# mouse
+# set -g mouse-resize-pane on
+# set -g mouse-select-pane on
+# set -g mouse-select-window on
+# setw -g mode-mouse on
+
+################################################################
+#  COLOUR - Solarized
+################################################################
+# default statusbar colors
+set-option -g status-bg colour235 #base02
+set-option -g status-fg colour136 #yellow
+set-option -g status-attr default
+
+# default window title colors
+set-window-option -g window-status-fg colour244
+set-window-option -g window-status-bg default
+set-window-option -g window-status-attr dim
+
+# active window title colors
+set-window-option -g window-status-current-fg colour166 #orange
+set-window-option -g window-status-current-bg default
+set-window-option -g window-status-current-attr bright
+
+# pane border
+set-option -g pane-border-fg colour235 #base02
+set-option -g pane-active-border-fg colour240 #base01
+
+# border
+#set -g pane-border-fg blue
+#set -g pane-border-bg black
+#set -g pane-active-border-fg blue
+#set -g pane-active-border-bg blue
+
+# message text
+set-option -g message-bg colour235 #base02
+set-option -g message-fg colour166 #orange
+
+# pane number display
+set-option -g display-panes-active-colour colour33 #blue
+set-option -g display-panes-colour colour166 #orange
+
+# clock
+set-window-option -g clock-mode-colour colour64 #green
+
+# alert message line
+set -g message-fg black
+set -g message-bg green
+
+# copy selection color
+setw -g mode-fg black
+setw -g mode-bg green
