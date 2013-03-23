@@ -1,5 +1,5 @@
 [user]
-  name = Wei Gao
+	name = Wei Gao
 	email = jky239@gmail.com
 [alias]
 	last = cat-file commit HEAD
@@ -10,8 +10,12 @@
 	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
 [core]
 	editor = emacsclient -t -a=\\\"\\\"
+	autocrlf = input
 [color]
 	branch = auto
 	diff = auto
 	interactive = auto
 	status = auto
+[credential]
+	helper = cache --timeout=3600
+	

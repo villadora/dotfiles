@@ -11,11 +11,11 @@ esac
 # Functions
 man() { command man "$@" | less; }
 
-source ~/dotfiles/source/z.sh
+#source ~/dotfiles/source/z.sh
 
 # add git completion support
-source ~/dotfiles/source/.git-completion.sh
-source ~/dotfiles/source/git-prompt.sh
+#source ~/dotfiles/source/.git-completion.sh
+#source ~/dotfiles/source/git-prompt.sh
 
 
 if [ -f ~/.bashrc ]; then
