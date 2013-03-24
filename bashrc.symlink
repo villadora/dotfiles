@@ -106,9 +106,7 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 # Customise the prompt.
-#PS1='\[\e[1;33m\]\$\u\[\e[0m\]@\[\e[1;32m\]\h\[\e[0m\] \[\e[1;35m\] \w\[\e[0m\] \[\e[1;37m\]\s [\!] $(__git_ps1 " (%s)") \$\[\e[0m\] '
-
-
+PS1='\[\e[1;33m\]\$\u\[\e[0m\]@\[\e[1;32m\]\h\[\e[0m\] \[\e[1;35m\] \w\[\e[0m\] \[\e[1;37m\]\s [\!] $(__git_ps1 " (%s)") \$\[\e[0m\] '
 
 # Init alias in bash
 alias mv="mv -i"
@@ -126,4 +124,7 @@ alias grep='grep --colour=auto'
 alias dir="ls -laF --color"
 alias git-log="git log --pretty=raw"
 
-alias fls="ls -S --color=auto | sed -n '1,12p' | paste - - -
+alias fls="ls -S --color=auto | sed -n '1,12p' | paste - - -"
+
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
