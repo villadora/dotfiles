@@ -8,6 +8,20 @@ case ${TERM} in
 esac
 
 
+# set editor to emacs style
+EDITOR=emacs
+
+OS=`uname | tr '[A-Z]' '[a-z]'`
+
+if [[ "${OS}" == "windowsnt" ]]; then
+	OS=windows
+elif [[ "${OS}" == "darwin" ]]; then
+	OS=mac
+elif [[ "${OS}" = "linux" ]]; then
+	OS=linux
+fi
+readonly OS
+
 # Functions
 man() { command man "$@" | less; }
 

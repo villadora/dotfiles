@@ -73,13 +73,15 @@ esac
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+    if [ $"OS" == "linux"]; then
+        alias ls='ls --color=auto'
+        #alias dir='dir --color=auto'
+        #alias vdir='vdir --color=auto'
 
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
+        alias grep='grep --color=auto'
+        alias fgrep='fgrep --color=auto'
+        alias egrep='egrep --color=auto'
+    fi
 fi
 
 # some more ls aliases
@@ -114,19 +116,19 @@ alias mv="mv -i"
 alias cp="cp -i"
 alias ec="emacsclient -t"
 alias g++="g++ -Wall -std=c++98 -pedantic "
-alias ls='ls --color=auto'
-alias grep='grep --colour=auto'
-#alias ecal="/ms/user/r/ronisaac/bin/ecal"
-#alias esplist="/ms/user/s/smalec/bin/esplist"
-#alias kuufind="/ms/dist/unixops/PROJ/rmc/incr/bin/kuufind"
-#alias listgroup="/ms/dist/aurora/bin/listgroup"
-#alias minfo="/ms/dist/aurora/bin/minfo"
-#alias multicmd="/v/global/user/b/be/bet/bin/multicmd"
-alias dir="ls -laF --color"
-alias git-log="git log --pretty=raw"
 
-alias fls="ls -S --color=auto | sed -n '1,12p' | paste - - -"
 
+if [ "${OS}" == "linux" ]; then
+    alias ls='ls --color=auto'
+    alias grep='grep --colour=auto'
+    alias dir="ls -laF --color"
+    alias fls="ls -S --color=auto | sed -n '1,12p' | paste - - -"
+elif [ "${OS}" == "mac" ]; then
+    alias ls='ls -G'
+    alias grep='grep -G'
+    alias dir="ls -laFG"
+    alias fls="ls -SG | sed -n '1,12p' | paste - - -"
+fi
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 

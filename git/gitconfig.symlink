@@ -5,14 +5,15 @@
 	last = cat-file commit HEAD
 	find = lost = fsck --lost-found
 	co = checkout
-	st = status -sb
-        lg = log --pretty=format:'%Cred%h%Creset -%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+	stb = status -sb
+	st = status -b
+	lg = log --pretty=format:'%Cred%h%Creset -%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit
 	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
-        standup = "!git log --since yesterday --author `git config user.emal` -pretty=short"
-        purr = pull --rebase
-        ready = rebase -i @{u}
-        ignored = ls-files -others -i -exclude-standard
+	standup = "!git log --since yesterday --author `git config user.emal` -pretty=short"
+	purr = pull --rebase
+	ready = rebase -i @{u}
+	ignored = ls-files -others -i -exclude-standard
 [core]
 	editor = emacsclient -t -a=\\\"\\\"
 	autocrlf = input
