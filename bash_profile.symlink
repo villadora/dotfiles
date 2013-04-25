@@ -17,7 +17,7 @@ if [[ "${OS}" == "windowsnt" ]]; then
 	OS=windows
 elif [[ "${OS}" == "darwin" ]]; then
 	OS=mac
-elif [[ "${OS}" = "linux" ]]; then
+elif [[ "${OS}" == "linux" ]]; then
 	OS=linux
 fi
 readonly OS

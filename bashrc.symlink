@@ -135,3 +135,5 @@ PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$PATH:$HOME/bin # add script tools
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*x
+
+PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting

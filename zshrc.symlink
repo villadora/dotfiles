@@ -44,7 +44,6 @@ source $ZSH/oh-my-zsh.sh
 
 
 
-
 # use emacs style key
 bindkey -e
 
@@ -53,29 +52,31 @@ bindkey -e
 HISTSIZE=1000
 HISTFILESIZE=2000
 
-export HISTORY=~/.zhistoryp
+export HISTORY=~/.zhistory
 setopt HIST_IGNORE_DUPS
 setopt PUSHD_IGNORE_DUPS
 setopt EXTENDED_HISTORY
 
 
-# Init alias in bash
+# Init alias in zsh
+if [[ "${OS}" == "linux" ]]; then
+    alias ls='ls --color=auto'
+    alias grep='grep --colour=auto'
+    alias dir="ls -laF --color"
+    alias fls="ls -S --color=auto | sed -n '1,12p' | paste - - -"
+elif [[ "${OS}" == "mac" ]]; then
+    alias ls='ls -G'
+    alias grep='grep -G'
+    alias dir="ls -laFG"
+    alias fls="ls -SG | sed -n '1,12p' | paste - - -"
+fi
+
+
 alias mv="mv -i"
 alias cp="cp -i"
 alias ec="emacsclient -t"
 alias g++="g++ -Wall -std=c++98 -pedantic "
-alias ls='ls --color=auto'
-alias grep='grep --colour=auto'
-#alias ecal="/ms/user/r/ronisaac/bin/ecal"
-#alias esplist="/ms/user/s/smalec/bin/esplist"
-#alias kuufind="/ms/dist/unixops/PROJ/rmc/incr/bin/kuufind"
-#alias listgroup="/ms/dist/aurora/bin/listgroup"
-#alias minfo="/ms/dist/aurora/bin/minfo"
-#alias multicmd="/v/global/user/b/be/bet/bin/multicmd"
-alias dir="ls -laF --color"
-alias git-log="git log --pretty=raw"
 
-alias fls="ls -S --color=auto | sed -n '1,12p' | paste - - -"
 
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
@@ -83,3 +84,4 @@ PATH=$PATH:$HOME/bin # add script tools
 
 
 PROMPT='%(!.%{$fg_bold[red]%}.%{$fg_bold[yellow]%}%n%{$fg_bold[white]%}@)%{$fg_bold[green]%}%m %{$fg_bold[magenta]%}%(!.%1~.%~) %{$fg_bold[white]%}~zsh [%!] %{$fg_bold[blue]%}$(git_prompt_info)%_$(prompt_char)%{$reset_color%} '
+PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting

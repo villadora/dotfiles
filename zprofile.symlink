@@ -1,2 +1,21 @@
 
+＃ set emacs as default shell editor
+EDITOR=emacs
+
+# get os type parameter
+if [ -z "${OS}" ]; then
+	OS=`uname | tr '[A-Z]' '[a-z]'`
+
+	if [[ "${OS}" == "windowsnt" ]]; then
+	    OS=windows
+	elif [[ "${OS}" == "darwin" ]]; then
+	    OS=mac
+	elif [[ "${OS}" = "linux" ]]; then
+        OS=linux
+	fi
+fi
+
+readonly OS
+
+
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
