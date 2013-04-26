@@ -7,6 +7,8 @@ case ${TERM} in
         ;;
 esac
 
+# change PATH order
+export PATH=/usr/local/bin:/usr/local/sbin:${PATH}
 
 # set editor to emacs style
 EDITOR=emacs
@@ -26,7 +28,7 @@ readonly OS
 man() { command man "$@" | less; }
 
 # add z cmd
-source ~/.dotfiles/bash/z.sh
+source ~/.dotfiles/bash/z/z.sh
 
 # add git completion support
 source ~/.dotfiles/bash/git-completion.sh
@@ -38,3 +40,4 @@ if [ -f ~/.bashrc ]; then
 fi
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+[[ -s /Users/villa/.nvm/nvm.sh ]] && . /Users/villa/.nvm/nvm.sh # This loads NVM

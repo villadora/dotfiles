@@ -109,7 +109,7 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 # Customise the prompt.
-PS1='\[\e[1;33m\]\$\u\[\e[0m\]@\[\e[1;32m\]\h\[\e[0m\] \[\e[1;35m\] \w\[\e[0m\] \[\e[1;37m\]\s [\!] $(__git_ps1 " (%s)") \$\[\e[0m\] '
+PS1='\[\e[1;33m\]\$ \u\[\e[0m\]@\[\e[1;32m\]\h\[\e[0m\] \[\e[1;35m\] \w\[\e[0m\] \[\e[1;37m\]\s [\!] $(__git_ps1 " (%s)") \$\[\e[0m\] '
 
 # Init alias in bash
 alias mv="mv -i"

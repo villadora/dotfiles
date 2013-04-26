@@ -123,7 +123,7 @@ set -g terminal-overrides 'xterm*:smcup@:rmcup@'
 # status line
 set -g status-left " "
 # set -g status-right "#[fg=white,bg=black] [#S]#[fg=red,bright] [ #[fg=cyan]#H #[fg=red,bright]] #[fg=yellow,bright]%Y.%m.%d #[fg=green]%H:%M #[default]#[fg=magenta,bright]#[default]  "
-set -g status-right "#[fg=white,bg=black] [#S]#[fg=red,bright] [ #[fg=cyan]#H #[fg=red,bright]] #[fg=yellow,bright]%Y.%m.%d #[default]  "
+set -g status-right "#[fg=white,bg=black] [#S]#[fg=red,bright] [ #[fg=cyan]#H #[fg=red,bright]] #[fg=yellow,bright]%Y.%m.%d #[fg=green]%H:%M #[default]  "
 set -g status-right-length 100
 setw -g window-status-current-format " [#I#F] #W "
 setw -g window-status-format "[#I#F#W]"
@@ -183,3 +183,10 @@ set -g message-bg green
 # copy selection color
 setw -g mode-fg black
 setw -g mode-bg green
+
+
+# enable mouse
+set -g mode-mouse on
+set -g mouse-resize-pane on
+set -g mouse-select-pane on
+set -g mouse-select-window on
