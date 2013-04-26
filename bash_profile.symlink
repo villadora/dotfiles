@@ -43,5 +43,5 @@ fi
 # add rvm
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
->>>>>>> add nvm path
+# add nvm path
 [[ -s /Users/villa/.nvm/nvm.sh ]] && . /Users/villa/.nvm/nvm.sh # This loads NV

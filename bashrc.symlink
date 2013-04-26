@@ -73,7 +73,7 @@ esac
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    if [ $"OS" == "linux"]; then
+    if [ $"OS" == "linux" ]; then
         alias ls='ls --color=auto'
         #alias dir='dir --color=auto'
         #alias vdir='vdir --color=auto'
@@ -118,12 +118,12 @@ alias ec="emacsclient -t"
 alias g++="g++ -Wall -std=c++98 -pedantic "
 
 
-if [ "${OS}" == "linux" ]; then
+if [[ "${OS}" == "linux" ]]; then
     alias ls='ls --color=auto'
     alias grep='grep --colour=auto'
     alias dir="ls -laF --color"
     alias fls="ls -S --color=auto | sed -n '1,12p' | paste - - -"
-elif [ "${OS}" == "mac" ]; then
+elif [[ "${OS}" == "mac" ]]; then
     alias ls='ls -G'
     alias grep='grep -G'
     alias dir="ls -laFG"
