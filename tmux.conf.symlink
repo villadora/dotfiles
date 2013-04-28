@@ -65,7 +65,7 @@ bind-key -nr M-Right select-window -t :+
 bind-key -r j select-pane -t :.-
 bind-key -r k select-pane -t :.+
 
-# Ctrl-Up/Down cyles thru panes (no prefix)
+# Meta-Up/Down cyles thru panes (no prefix)
 bind-key -nr M-Up   select-pane -t :.-
 bind-key -nr M-Down select-pane -t :.+
 
