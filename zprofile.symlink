@@ -1,13 +1,7 @@
-# add z cmd
-source ~/.dotfiles/bash/z/z.sh
 
 
 # change PATH order
-export PATH=/usr/local/bin:/usr/local/sbin:${PATH}
-
-＃ set emacs as default shell editor
-EDITOR=emacs
-
+PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/sbin:/usr/sbin:/usr/local/git/bin
 
 # set editor to emacs style
 EDITOR=emacs
@@ -23,7 +17,3 @@ elif [[ "${OS}" == "linux" ]]; then
 fi
 
 readonly OS
-
-
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*

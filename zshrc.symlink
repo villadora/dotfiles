@@ -36,11 +36,13 @@ ZSH_THEME="gentoo" # looks similar to bash
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git ruby git-flow github npm rvm themes)
+plugins=(git ruby git-flow github npm rvm themes brew)
 
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
+PROMPT='%(!.%{$fg_bold[red]%}.%{$fg_bold[yellow]%}$ %n%{$fg_bold[white]%}@)%{$fg_bold[green]%}%m  %{$fg_bold[magenta]%}%(!.%1~.%~) %{$fg_bold[white]%}~zsh [%!] %{$fg_bold[cyan]%}$(git_prompt_info)%_$(prompt_char)%{$reset_color%} '
+
 
 
 
@@ -58,40 +60,29 @@ setopt PUSHD_IGNORE_DUPS
 setopt EXTENDED_HISTORY
 
 
-# Init alias in zsh
-if [[ "${OS}" == "linux" ]]; then
-    alias ls='ls --color=auto'
-    alias grep='grep --colour=auto'
-    alias dir="ls -laF --color"
-    alias fls="ls -S --color=auto | sed -n '1,12p' | paste - - -"
-elif [[ "${OS}" == "mac" ]]; then
-    alias ls='ls -G'
-    alias grep='grep -G'
-    alias dir="ls -laFG"
-    alias fls="ls -SG | sed -n '1,12p' | paste - - -"
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
 fi
 
-
-alias mv="mv -i"
-alias cp="cp -i"
-alias ec="emacsclient -t"
-alias g++="g++ -Wall -std=c++98 -pedantic "
-
-
+# add z cmd
+source ~/.dotfiles/bash/z/z.sh
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$PATH:$HOME/bin # add script tools
 
 PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting
 
+PATH=$PATH:/usr/local/share/python # add python bin
 
-PROMPT="%(!.%{$fg_bold[red]%}.\
-%{$fg_bold[yellow]%}$ %n\
-%{$fg_bold[white]%}@)\
-%{$fg_bold[green]%}%m\
-  %{$fg_bold[magenta]%}%(!.%1~.%~) \
-%{$fg_bold[white]%}~zsh [%!] \
-%{$fg_bold[cyan]%}$(git_prompt_info)%_$(prompt_char)%{$reset_color%} "
 
-# add function z: jump
-source ~/.dotfiles/bash/z/z.sh
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session 
+
+PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting
+
+[[ -s "$HOME/.nvm/nvm.sh" ]] && . "$HOME/.nvm/nvm.sh"  # This loads NVM into a shell session

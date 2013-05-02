@@ -114,8 +114,30 @@ install_dotfiles () {
   done
 }
 
+
+install_nvm() {
+    if ! [ -f "$HOME/.nvm/nvm.sh" ]; then
+        info "Install NVM"
+        git clone git://github.com/creationix/nvm.git "$HOME/.nvm"
+        source "$HOME/.nvm/nvm.sh"
+    fi
+}
+
+
+install_rvn() {
+    if ! [ -f "$HOME/.rvm/rvm" ]; then
+        info "Install RVM"
+        curl -#L https://get.rvm.io | bash -s stable --autolibs=3 --ruby
+    fi
+}
+
 setup_gitconfig
 install_dotfiles
+
+install_nvm
+install_rvm
+
+
 
 # If we are on a mac, lets install and setup homebrew
 if [ "$(uname -s)" == "Darwin" ]

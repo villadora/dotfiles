@@ -120,16 +120,8 @@ set -g history-limit 100000
 set -g terminal-overrides 'xterm*:smcup@:rmcup@'
 
 
-# status line
-set -g status-left " "
-# set -g status-right "#[fg=white,bg=black] [#S]#[fg=red,bright] [ #[fg=cyan]#H #[fg=red,bright]] #[fg=yellow,bright]%Y.%m.%d #[fg=green]%H:%M #[default]#[fg=magenta,bright]#[default]  "
-set -g status-right "#[fg=white,bg=black] [#S]#[fg=red,bright] [ #[fg=cyan]#H #[fg=red,bright]] #[fg=yellow,bright]%Y.%m.%d #[fg=green]%H:%M #[default]  "
-set -g status-right-length 100
-setw -g window-status-current-format " [#I#F] #W "
-setw -g window-status-format "[#I#F#W]"
 
-# Append ENV VARs to be copied into the session
-set -ga update-environment " DBUS_SESSION_BUS_ADDRESS GNOME_KEYRING_CONTROL GPG_AGENT_INFO KRB5CCNAME"
+
 
 # mouse
 # set -g mouse-resize-pane on
@@ -190,3 +182,32 @@ set -g mode-mouse on
 set -g mouse-resize-pane on
 set -g mouse-select-pane on
 set -g mouse-select-window on
+
+
+################################################################
+# Status Line
+################################################################
+set -g status-left " "
+# set -g status-right "#[fg=white,bg=black] [#S]#[fg=red,bright] [ #[fg=cyan]#H #[fg=red,bright]] #[fg=yellow,bright]%Y.%m.%d #[fg=green]%H:%M #[default]#[fg=magenta,bright]#[default]  "
+set -g status-right "#[fg=white,bg=black] [#S]#[fg=red,bright] [ #[fg=cyan]#H #[fg=red,bright]] #[fg=yellow,bright]%Y.%m.%d #[fg=green]%H:%M #[default]  "
+set -g status-right-length 100
+setw -g window-status-current-format " [#I#F] #W "
+setw -g window-status-format "[#I#F#W]"
+# Append ENV VARs to be copied into the session
+set -ga update-environment " DBUS_SESSION_BUS_ADDRESS GNOME_KEYRING_CONTROL GPG_AGENT_INFO KRB5CCNAME"
+
+
+
+
+set-option -g status on
+set-option -g status-interval 2
+set-option -g status-utf8 on
+set-option -g status-justify "centre"
+set-option -g status-left-length 30
+set-option -g status-right-length 90
+set-option -g status-left "#($HOME/.dotfiles/vendor/tmux-powerline/powerline.sh left)"
+set-option -g status-right "#($HOME/.dotfiles/vendor/tmux-powerline/powerline.sh right)"
+
+# status line
+set-window-option -g window-status-current-format "#[fg=colour235, bg=colour27]⮀#[fg=colour255, bg=colour27] #I ⮁ #W #[fg=colour27, bg=colour235]⮀"
+

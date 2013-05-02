@@ -21,6 +21,7 @@ if [[ "${OS}" == "windowsnt" ]]; then
 	OS=windows
 elif [[ "${OS}" == "darwin" ]]; then
 	OS=mac
+        source ~/.dotfiles/os/mac.sh
 elif [[ "${OS}" == "linux" ]]; then
 	OS=linux
 fi
