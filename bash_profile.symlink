@@ -8,35 +8,15 @@ case ${TERM} in
 esac
 
 
-# change PATH order, to override the default executables in /usr/bin 
-#PATH=/usr/local/bin:/usr/local/sbin:${PATH}
-PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/sbin:/usr/sbin:/usr/local/git/bin
-
-# set editor to emacs style
-EDITOR=emacs
-
-OS=`uname | tr '[A-Z]' '[a-z]'`
-
-if [[ "${OS}" == "windowsnt" ]]; then
-	OS=windows
-elif [[ "${OS}" == "darwin" ]]; then
-	OS=mac
-        source ~/.dotfiles/os/mac.sh
-elif [[ "${OS}" == "linux" ]]; then
-	OS=linux
-fi
-readonly OS
+# add common profile configs
+source ~/.dotfiles/profile_common.sh
 
 # Functions
 man() { command man "$@" | less; }
 
-# add z cmd
-source ~/.dotfiles/bash/z/z.sh
-
 # add git completion support
 source ~/.dotfiles/bash/git-completion.sh
 source ~/.dotfiles/bash/git-prompt.sh
-
 
 
 if [ -f ~/.bashrc ]; then

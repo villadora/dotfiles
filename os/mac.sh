@@ -1,1 +1,1 @@
-~/.dotfiles/bin/emacs-daemon.sh
+~/.dotfiles/bin/emacs-daemon

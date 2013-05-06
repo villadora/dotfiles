@@ -23,12 +23,17 @@ alias l='ls -CF'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 
-
-# Init alias in bash
 alias mv="mv -i"
 alias cp="cp -i"
 alias ec="emacsclient -t"
 alias g++="g++ -Wall -std=c++98 -pedantic "
+
+
+# git alias
+alias ga="git add"
+alias gca="git commit -am"
+alias gst="git st"
+alias gl="git lg"
 
 
 if [[ "${OS}" == "linux" ]]; then
@@ -41,4 +46,5 @@ elif [[ "${OS}" == "mac" ]]; then
     alias grep='grep -G'
     alias dir="ls -laFG"
     alias fls="ls -SG | sed -n '1,12p' | paste - - -"
+    alias lock.screen="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 fi
