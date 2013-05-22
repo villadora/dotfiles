@@ -4,14 +4,12 @@ REMOTE_REPO=$1
 BRANCH=$2
 
 if [[ -z "$3" ]];then
-    DIR=`expr "$REPO" : '.*\/\(.*\).git$'`
-    echo $DIR
+    DIR=`expr "$REMOTE_REPO" : '.*\/\(.*\).git$'`
 else
     DIR=$3
 fi
 
-
-mkdir $DIR
+mkdir -p $DIR
 cd $DIR
 git init
 git remote add -t $BRANCH -f origin $REMOTE_REPO
