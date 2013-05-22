@@ -88,8 +88,6 @@ fi
 # Customise the prompt.
 PS1='\[\e[1;33m\]\$ \u\[\e[0m\]@\[\e[1;32m\]\h\[\e[0m\] \[\e[1;35m\] \w\[\e[0m\] \[\e[1;37m\]\s [\!] $(__git_ps1 " (%s)") \$\[\e[0m\] '
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
 PATH=$PATH:$HOME/bin # add script tools
 
 PATH=$PATH:/usr/local/share/python # add python bin

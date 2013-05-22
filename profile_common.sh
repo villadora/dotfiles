@@ -3,7 +3,7 @@
 PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/sbin:/usr/sbin:/usr/local/git/bin
 
 # add commands to PATH
-PATH=$PATH:$HOME/.dotfiles/bin
+PATH=$PATH:$HOME/.dotfiles/bin:$HOME/bin
 
 # set editor to emacs style
 EDITOR=emacs

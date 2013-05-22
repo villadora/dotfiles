@@ -5,8 +5,9 @@
 	last = cat-file commit HEAD
 	find = lost = fsck --lost-found
 	co = checkout
-	stb = status -sb
+	ci = commit
 	st = status -b
+	stb = status -sb
 	lg = log --pretty=format:'%Cred%h%Creset -%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit
 	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
@@ -15,9 +16,11 @@
 	purr = pull --rebase
 	ready = rebase -i @{u}
 	ignored = ls-files -others -i -exclude-standard
+        ignore-changes = update-index --assume-unchanged
 [core]
 	editor = emacsclient -t -a=\\\"\\\"
 	autocrlf = input
+        excludesfile = '~/.dotfiles/git/gitignore.global'
 [color]
 	branch = auto
 	diff = auto
