@@ -1,8 +1,0 @@
-.DS_Store
-.sass_cache
-*~
-*.elc
-auto-save-list
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock

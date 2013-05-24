@@ -13,6 +13,6 @@ mkdir -p $DIR
 cd $DIR
 git init
 git remote add -t $BRANCH -f origin $REMOTE_REPO
-git checkout $BRANCH
+git checkout -b $BRANCH
 
 

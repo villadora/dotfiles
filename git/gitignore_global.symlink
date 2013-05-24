@@ -1,0 +1,11 @@
+.DS_Store
+.DS_Store?
+.sass_cache
+.emacs.desktop
+.emacs.desktop.lock
+*~
+*.elc
+auto-save-list
+\#*\#
+.Trash
+Thumb.db
