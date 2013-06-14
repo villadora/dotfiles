@@ -2,8 +2,8 @@
 
 
 if [[ -z "$1" ]];then
-   echo "Please provide user id!"
-   exit 1
+    echo "Please provide user id!"
+    exit 1
 fi
 
 USER=$1

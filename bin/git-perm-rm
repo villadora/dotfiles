@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+if [[ -z "$1" ]];then
+    echo "Please provide a path!"
+    exit 1
+fi
+
+DIR=$1
+
+read -p "This operation will permanent remove ${DIR} from your git repository, are you sure?(y/n) " -n 1 -r
+
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    git filter-branch --force --index-filter "git rm --cached --ignore-unmatch ${DIR}"  --prune-empty --tag-name-filter cat -- --all
+fi
+
