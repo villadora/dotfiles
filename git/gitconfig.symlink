@@ -31,5 +31,10 @@
 	
 [push]
 	default = simple
+[http]
+	proxy = http://127.0.0.1:8087
+        sslVerify = false
+	postBuffer = 524288000
 [https]
 	proxy = http://127.0.0.1:8087
+        sslVerify = false
