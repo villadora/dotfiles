@@ -26,12 +26,15 @@ mimic_state() {
     host=$(printf "${prompt_line}" | cut -d@ -f2 | cut -d' ' -f1)
     working_dir=$(printf "${prompt_line}" | cut -d' ' -f4)
 
+# I used to ssh different host via different user name during my working environment:-(, so this is not useful for me. (blame to our operation guys, they don't know how to config a secure evnironment)
 #     if [ "${host}" != "$(hostname)" ] && [ "${host}" != "" ] ;then
-#        tmux send-keys -t ${pane_full} "ssh ${host}" #carriage return from previous line
+#        tmux send-keys -t ${pane_full} "ssh ${host}
+#" #carriage return from previous line
 #       echo "SSH'd to ${host} in ${pane_full}.  Sleeping 5 sec..."
 #        sleep 5
 #    fi
-    tmux send-keys -t ${pane_full} "cd ${working_dir}" #carriage return from previous line
+    tmux send-keys -t ${pane_full} "cd ${working_dir}
+" #carriage return from previous line
 }
 
 #######################
@@ -110,7 +113,9 @@ if [ "${task}" = 'backup' ] ;then
         tmux list-windows -t ${session} | sed 's/^\([^:]*\): \(.*\) \[[0-9]*x[0-9]*\].*$/\1:\2/' | while read window_with_name;do
 
             window=$(echo ${window_with_name} | awk -F: '{print $1}')
-            window_name=$(echo ${window_with_name} | awk -F: '{print $2}')
+            ## get name
+            window_name=$(echo ${window_with_name} | awk -F '[:*-]+' '{print $2}' | awk -F ' ' '{print $1}')
+
             # save window_name
             echo "${window_name}" >${backup_dir}/${session}:${window}
 
@@ -209,12 +214,14 @@ elif [ "${task}" = 'restore' ] ;then
                 tmux select-layout -t ${session}:${window} "${layout}"
                 for pane in ${pane_list} ;do
                     pane_full="${session}:${window}.${pane}"
-                    tmux send-keys -t ${pane_full} "cat ${backup_dir}/${pane_full}" #carriage return from previous line
+                    tmux send-keys -t ${pane_full} "cat ${backup_dir}/${pane_full}
+" #carriage return from previous line
                     mimic_state
                 done
             else
                 pane_full="${session}:${window}.0"
-                tmux send-keys -t ${pane_full} "grep -v -e 'strings you dont want to see' -e 'another string you dont want to see' ${backup_dir}/${pane_full} | cat -s" #carriage return from previous line
+                tmux send-keys -t ${pane_full} "grep -v -e 'strings you dont want to see' -e 'another string you dont want to see' ${backup_dir}/${pane_full} | cat -s
+" #carriage return from previous line
                 mimic_state
             fi
         done
