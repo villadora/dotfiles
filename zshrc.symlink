@@ -76,9 +76,11 @@ PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting
 
 PATH=$PATH:/usr/local/share/python # add python bin
 
-
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session 
 
 PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting
 
 [[ -s "$HOME/.nvm/nvm.sh" ]] && . "$HOME/.nvm/nvm.sh"  # This loads NVM into a shell session
+
+
+PATH=$PATH:$HOME/.dotfiles/bin:$HOME/bin
