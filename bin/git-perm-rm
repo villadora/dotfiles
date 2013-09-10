@@ -11,6 +11,6 @@ DIR=$1
 read -p "This operation will permanent remove ${DIR} from your git repository, are you sure?(y/n) " -n 1 -r
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    git filter-branch --force --index-filter "git rm --cached --ignore-unmatch ${DIR}"  --prune-empty --tag-name-filter cat -- --all
+    git filter-branch --force --index-filter "git rm -r --cached --ignore-unmatch ${DIR}"  --prune-empty --tag-name-filter cat -- --all
 fi
 
