@@ -113,7 +113,7 @@ set -g visual-activity on
 setw -g automatic-rename on
 
 setw -g aggressive-resize on
-set -g history-limit 100000
+set -g history-limit 50000
 
 
 # scrolling with terminal scroll bar
