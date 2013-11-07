@@ -8,6 +8,14 @@ case ${TERM} in
 esac
 
 
+RESET="${HOME}/.reset"
+touch "${RESET}"
+echo "PATH=${PATH}" > "${RESET}"
+
+# add commands to PATH
+PATH=$PATH:$HOME/.dotfiles/bin:$HOME/bin
+
+
 # add common profile configs
 source ~/.dotfiles/profile_common.sh
 
