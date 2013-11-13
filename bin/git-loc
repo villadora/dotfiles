@@ -1,18 +1,23 @@
 #!/bin/bash
 
+while getopts ":u:" o; do
+    case "${o}" in 
+        u)
+            u=${OPTARG}
+            ;;
+    esac
+done
+
+shift $((OPTIND-1))
 
 if [[ -z "$1" ]];then
-    echo "Please provide user id!"
-    exit 1
-fi
-
-USER=$1
-
-if [[ -z "$2" ]];then
     DIR="."
 else
     DIR=$2
 fi
 
-git log --author="${USER}" --pretty=tformat: --numstat -- ${DIR} | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "\tlines added:\t%s\n\tlines removed:\t%s\n\ttotal loc:\t%s\n", add, subs, loc}' -
-
+if [[ -z "$u" ]]; then
+    echo "total lines: "`git ls-files "$DIR" | xargs cat | wc -l`
+else
+    git log --author="${u}" --pretty=tformat: --numstat -- ${DIR} | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "\tlines added:\t%s\n\tlines removed:\t%s\n\ttotal loc:\t%s\n", add, subs, loc}' -
+fi
