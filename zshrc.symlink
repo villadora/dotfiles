@@ -85,3 +85,6 @@ PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting
 
 
 PATH=$PATH:$HOME/.dotfiles/bin:$HOME/bin
+
+#THIS MUST BE AT THE END OF THE FILE FOR JENV TO WORK!!!
+[[ -s "$HOME/.jenv/bin/jenv-init.sh" ]] && source "$HOME/.jenv/bin/jenv-init.sh" && source "$HOME/.jenv/commands/completion.sh"

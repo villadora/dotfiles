@@ -15,9 +15,11 @@
 	rclone = clone --recursive
 	purr = pull --rebase
 	ready = rebase -i @{u}
-	ignored = ls-files -others -i -exclude-standard
+	ignored = ls-files --others -i --exclude-standard
         ignore-changes = update-index --assume-unchanged
-	diff-all = diff --cached
+        cpick= cherry-pick
+        merge-to = "!gitmergeto() { export tmp_branch=`git branch | grep '* ' | tr -d '* '` && echo \"$1 $tmp_branch\" && git checkout $1 && git merge $tmp_branch && git checkout $tmp_branch; unset tmp_branch; }; gitmergeto"
+	diffa = diff --cached
 [core]
 	editor = emacsclient -t -a=\\\"\\\"
 	autocrlf = input

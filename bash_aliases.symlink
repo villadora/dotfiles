@@ -30,11 +30,15 @@ alias g++="g++ -Wall -std=c++98 -pedantic "
 
 
 # git alias
+alias gti="git"
 alias ga="git add"
 alias gca="git commit -am"
 alias gst="git st"
 alias gl="git lg"
 
+
+
+alias ndh="node --harmony"
 
 if [[ "${OS}" == "linux" ]]; then
     alias ls='ls --color=auto'
