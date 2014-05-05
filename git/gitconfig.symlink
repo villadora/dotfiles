@@ -41,3 +41,7 @@
 [https]
 	proxy = http://127.0.0.1:8087
         sslVerify = false
+#[branch]
+#	autosetuprebase = always
+[help]
+	autocorrect = 1
