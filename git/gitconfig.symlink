@@ -29,6 +29,7 @@
 	diff = auto
 	interactive = auto
 	status = auto
+	ui = 1
 [credential]
 	helper = cache --timeout=3600
 	
