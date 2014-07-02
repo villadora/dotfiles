@@ -34,6 +34,3 @@ fi
 if [ -f ~/.bash_custom ]; then
     source ~/.bash_custom
 fi
-
-#THIS MUST BE AT THE END OF THE FILE FOR JENV TO WORK!!!
-[[ -s "/Users/villa/.jenv/bin/jenv-init.sh" ]] && source "/Users/villa/.jenv/bin/jenv-init.sh" && source "/Users/villa/.jenv/commands/completion.sh"

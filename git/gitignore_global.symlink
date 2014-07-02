@@ -1,4 +1,5 @@
 .DS_Store
+.tern-port
 .DS_Store?
 .sass_cache
 .emacs.desktop
