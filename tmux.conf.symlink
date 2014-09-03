@@ -5,6 +5,13 @@ set -g base-index 1
 set -g default-terminal "xterm-256color"
 
 ################################################################
+# Reattach user namespace
+################################################################
+# Mac OS X fix for pbcopy, pbpaste, and launchctl
+set-option -g default-command "safe-reattach-to-user-namespace -l $SHELL"
+
+
+################################################################
 # Key bindings
 ################################################################
 
@@ -211,3 +218,24 @@ set-option -g status-right "#($HOME/.dotfiles/vendor/tmux-powerline/powerline.sh
 # status line
 set-window-option -g window-status-current-format "#[fg=colour235, bg=colour27]⮀#[fg=colour255, bg=colour27] #I ⮁ #W #[fg=colour27, bg=colour235]⮀"
 
+
+################################################################
+# Tmux Plugins
+################################################################
+
+# List of plugins
+# Supports `github_username/repo` or full git URLs
+set -g @tpm_plugins "              \
+  tmux-plugins/tpm                 \
+  tmux-plugins/tmux-open           \
+  tmux-plugins/tmux-resurrect      \
+"
+#  tmux-plugins/tmux-sensible       \
+
+# Other examples:
+# github_username/plugin_name    \
+# git@github.com/user/plugin     \
+# git@bitbucket.com/user/plugin  \
+
+# initializes TMUX plugin manager
+run-shell ~/.tmux/plugins/tpm/tpm

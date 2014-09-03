@@ -77,6 +77,8 @@ PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting
 
 PATH=$PATH:/usr/local/share/python # add python bin
 
+PATH=$PATH:/usr/local/opt/go/libexec/bin # add go path
+
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session 
 
 PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting
@@ -86,5 +88,14 @@ PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting
 
 PATH=$PATH:$HOME/.dotfiles/bin:$HOME/bin
 
+# Add $GOPATH/bin to path
+PATH=$PATH:$GOPATH/bin
+
 #THIS MUST BE AT THE END OF THE FILE FOR JENV TO WORK!!!
-[[ -s "$HOME/.jenv/bin/jenv-init.sh" ]] && source "$HOME/.jenv/bin/jenv-init.sh" && source "$HOME/.jenv/commands/completion.sh"
+# [[ -s "$HOME/.jenv/bin/jenv-init.sh" ]] && source "$HOME/.jenv/bin/jenv-init.sh" && source "$HOME/.jenv/commands/completion.sh"
+
+
+MANPATH=$MANPATH:/usr/share/man:/usr/local/share/man
+
+
+GOPATH=$HOME/dev/libs/go

@@ -96,6 +96,8 @@ PATH=$PATH:$HOME/bin # add script tools
 
 PATH=$PATH:/usr/local/share/python # add python bin
 
+PATH=$PATH:/usr/local/opt/go/libexec/bin # add go path
+
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session 
 
 PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting
