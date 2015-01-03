@@ -14,11 +14,17 @@ if [[ "${OS}" == "windowsnt" ]]; then
 	OS=windows
 elif [[ "${OS}" == "darwin" ]]; then
 	OS=mac
+        ulimit -S -n 1024
 elif [[ "${OS}" == "linux" ]]; then
 	OS=linux
 fi
 
 readonly OS
 
+
+
 # add z cmd
 source ~/.dotfiles/bash/z/z.sh
+
+
+function mountAndroid { hdiutil attach ~/dev/vms/android.dmg.sparseimage -mountpoint /Volumes/android; }
