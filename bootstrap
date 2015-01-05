@@ -124,7 +124,7 @@ install_nvm() {
 }
 
 
-install_rvn() {
+install_rvm() {
     if ! [ -f "$HOME/.rvm/rvm" ]; then
         info "Install RVM"
         curl -#L https://get.rvm.io | bash -s stable --autolibs=3 --ruby
@@ -135,7 +135,7 @@ setup_gitconfig
 install_dotfiles
 
 install_nvm
-install_rvm
+# install_rvm
 
 
 

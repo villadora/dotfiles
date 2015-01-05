@@ -8,6 +8,7 @@
 	ci = commit
 	st = status -b
 	stb = status -sb
+	sbm = submodule
 	lg = log --pretty=format:'%Cred%h%Creset -%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit
 	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
@@ -35,13 +36,6 @@
 	
 [push]
 	default = simple
-[http]
-	proxy = http://127.0.0.1:8087
-        sslVerify = false
-	postBuffer = 524288000
-[https]
-	proxy = http://127.0.0.1:8087
-        sslVerify = false
 #[branch]
 #	autosetuprebase = always
 [help]

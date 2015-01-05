@@ -25,7 +25,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 alias mv="mv -i"
 alias cp="cp -i"
-alias ec="emacsclient -t"
+alias ec="emacsclient"
 alias g++="g++ -Wall -std=c++98 -pedantic "
 
 
