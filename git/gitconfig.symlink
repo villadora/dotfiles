@@ -1,5 +1,5 @@
 [user]
-	name = Wei Gao
+	name = villadora
 	email = jky239@gmail.com
 [alias]
 	last = cat-file commit HEAD
@@ -22,9 +22,9 @@
         merge-to = "!gitmergeto() { export tmp_branch=`git branch | grep '* ' | tr -d '* '` && echo \"$1 $tmp_branch\" && git checkout $1 && git merge $tmp_branch && git checkout $tmp_branch; unset tmp_branch; }; gitmergeto"
 	diffa = diff --cached
 [core]
-	editor = emacsclient -t -a=\\\"\\\"
+	editor = emacsclient -nw
 	autocrlf = input
-	excludesfile = ~/.gitignore_global
+	excludesfile = /Users/villadora/.gitignore_global
 [color]
 	branch = auto
 	diff = auto
@@ -40,3 +40,9 @@
 #	autosetuprebase = always
 [help]
 	autocorrect = 1
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true

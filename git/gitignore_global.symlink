@@ -1,4 +1,7 @@
 .DS_Store
+.DS_Store/
+node_modules/
+.nvmrc
 .tern-port
 .DS_Store?
 .sass_cache
@@ -11,3 +14,7 @@ auto-save-list
 .Trash
 Thumb.db
 *.imi
+#.idea/**/*
+gradle/
+gradlew
+gradlew.bat

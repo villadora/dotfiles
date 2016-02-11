@@ -1,6 +1,8 @@
 # index start from 1
 set -g base-index 1
 
+set -ag terminal-overrides ',screen*:cvvis=\E[34l\E[?25h'
+
 # 256 color
 set -g default-terminal "xterm-256color"
 
@@ -185,10 +187,10 @@ setw -g mode-bg green
 
 
 # enable mouse
-set -g mode-mouse on
-set -g mouse-resize-pane on
-set -g mouse-select-pane on
-set -g mouse-select-window on
+#set -g mode-mouse on
+#set -g mouse-resize-pane on
+#set -g mouse-select-pane on
+#set -g mouse-select-window on
 
 
 ################################################################
@@ -243,3 +245,5 @@ set -g @tpm_plugins "              \
 
 # initializes TMUX plugin manager
 run-shell ~/.tmux/plugins/tpm/tpm
+
+
