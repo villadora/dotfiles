@@ -88,16 +88,33 @@ PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting
 [[ -s "$HOME/.nvm/nvm.sh" ]] && . "$HOME/.nvm/nvm.sh"  # This loads NVM into a shell session
 
 
-PATH=$PATH:$HOME/.dotfiles/bin:$HOME/bin
+PATH=$HOME/.dotfiles/bin:$HOME/bin:$PATH
 
 # Add $GOPATH/bin to path
-PATH=$PATH:$GOPATH/bin
-
-#THIS MUST BE AT THE END OF THE FILE FOR JENV TO WORK!!!
-# [[ -s "$HOME/.jenv/bin/jenv-init.sh" ]] && source "$HOME/.jenv/bin/jenv-init.sh" && source "$HOME/.jenv/commands/completion.sh"
-
+PATH=$GOPATH/bin:$PATH
 
 MANPATH=$MANPATH:/usr/share/man:/usr/local/share/man
 
-
 GOPATH=$HOME/dev/libs/go
+
+
+export PATH="$HOME/dev/sofa:$PATH"
+fpath=(/Users/villadora/dev/sofa/resources/completion $fpath)
+autoload -U compinit && compinit -u
+
+
+# init java env
+export JAVA_HOME="$(/usr/libexec/java_home)"
+PATH=$JAVA_HOME/bin:$PATH
+
+# init jenv
+#THIS MUST BE AT THE END OF THE FILE FOR JENV TO WORK!!!
+# [[ -s "$HOME/.jenv/bin/jenv-init.sh" ]] && source "$HOME/.jenv/bin/jenv-init.sh" && source "$HOME/.jenv/commands/completion.sh"
+
+eval "$(jenv init -)"
+PATH=$HOME/.jenv/bin:$PATH
+
+
+
+export CEVM_DIR="/Users/villadora/.cevm"
+[ -s "$CEVM_DIR/cevm.sh" ] && . "$CEVM_DIR/cevm.sh"  # Loads cevm

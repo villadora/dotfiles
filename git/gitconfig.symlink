@@ -15,12 +15,15 @@
 	standup = "!git log --since yesterday --author `git config user.emal` -pretty=short"
 	rclone = clone --recursive
 	purr = pull --rebase
+  spurr = "!git stash;git svn fetch;git svn rebase;git stash pop -q"
 	ready = rebase -i @{u}
 	ignored = ls-files --others -i --exclude-standard
-        ignore-changes = update-index --assume-unchanged
-        cpick= cherry-pick
-        merge-to = "!gitmergeto() { export tmp_branch=`git branch | grep '* ' | tr -d '* '` && echo \"$1 $tmp_branch\" && git checkout $1 && git merge $tmp_branch && git checkout $tmp_branch; unset tmp_branch; }; gitmergeto"
-	diffa = diff --cached
+  ignore-changes = update-index --assume-unchanged
+  cpick= cherry-pick
+  merge-to = "!gitmergeto() { export tmp_branch=`git branch | grep '* ' | tr -d '* '` && echo \"$1 $tmp_branch\" && git checkout $1 && git merge $tmp_branch && git checkout $tmp_branch; unset tmp_branch; }; gitmergeto"
+	diffa = diff --cached --color
+  dsf = "!git diff --color $@ | diff-so-fancy"
+  diffk = difftool -y -t Kaleidoscope
 [core]
 	editor = emacsclient -nw
 	autocrlf = input
@@ -40,9 +43,11 @@
 #	autosetuprebase = always
 [help]
 	autocorrect = 1
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
 [mergetool "sourcetree"]
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[difftool "Kaleidoscope"]
+  cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"

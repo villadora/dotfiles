@@ -17,8 +17,8 @@ HISTSIZE=1000
 HISTFILESIZE=2000
 
 
-"\e[A": history-search-backward
-"\e[B": history-search-forward
+# "\e[A": history-search-backward
+# "\e[B": history-search-forward
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.

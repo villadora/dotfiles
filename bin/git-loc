@@ -12,12 +12,25 @@ shift $((OPTIND-1))
 
 if [[ -z "$1" ]];then
     DIR="."
+elif [[ -z "$2" ]];then
+    DIR=$1
 else
+    REV=$1
     DIR=$2
 fi
 
-if [[ -z "$u" ]]; then
+GARGS=
+
+if [[ -n "$u" ]]; then
+    GARGS="$GARGS --author=$u "
+fi
+
+if [[ -n "$REV" ]];then
+    GARGS="$GARGS $REV..HEAD "
+fi
+
+if [[ -z "$GARGS" ]];then
     echo "total lines: "`git ls-files "$DIR" | xargs cat | wc -l`
 else
-    git log --author="${u}" --pretty=tformat: --numstat -- ${DIR} | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "\tlines added:\t%s\n\tlines removed:\t%s\n\ttotal loc:\t%s\n", add, subs, loc}' -
+    git log --pretty=tformat: --numstat ${GARGS} -- ${DIR} | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "\tlines added:\t%s\n\tlines removed:\t%s\n\ttotal loc:\t%s\n", add, subs, loc}' -
 fi

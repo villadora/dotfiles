@@ -37,6 +37,12 @@ alias gst="git st"
 alias gl="git lg"
 
 
+
+
+# svn alias
+alias snv="svn"
+
+
 alias ndh="node --harmony"
 
 if [[ "${OS}" == "linux" ]]; then
@@ -51,3 +57,8 @@ elif [[ "${OS}" == "mac" ]]; then
     alias fls="ls -SG | sed -n '1,12p' | paste - - -"
     alias lock.screen="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 fi
+
+# jenv alias
+alias jenv_set_java_home='export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"'
+
+
