@@ -6,6 +6,9 @@ set -ag terminal-overrides ',screen*:cvvis=\E[34l\E[?25h'
 # 256 color
 set -g default-terminal "xterm-256color"
 
+# set default-path
+# set-option default-path "$PWD"
+
 ################################################################
 # Reattach user namespace
 ################################################################

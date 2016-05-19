@@ -61,4 +61,9 @@ fi
 # jenv alias
 alias jenv_set_java_home='export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"'
 
+# ssh alias
+alias sshzu='function __sshzu() { ssh -t $* "export LANG=zh_CN.utf8;bash"; unset -f __sshzu; }; __sshzu'
 
+
+# docker alias
+alias docker-run-default=eval "$(docker-machine env default)"

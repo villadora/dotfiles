@@ -90,13 +90,13 @@ PATH=$PATH:/usr/local/rvm/bin # Add RVM to PATH for scripting
 
 PATH=$HOME/.dotfiles/bin:$HOME/bin:$PATH
 
+export GOROOT_BOOTSTRAP=/usr/local/opt/go
+export GOPATH=$HOME/dev/libs/go
+
 # Add $GOPATH/bin to path
 PATH=$GOPATH/bin:$PATH
 
 MANPATH=$MANPATH:/usr/share/man:/usr/local/share/man
-
-GOPATH=$HOME/dev/libs/go
-
 
 export PATH="$HOME/dev/sofa:$PATH"
 fpath=(/Users/villadora/dev/sofa/resources/completion $fpath)
@@ -118,3 +118,6 @@ PATH=$HOME/.jenv/bin:$PATH
 
 export CEVM_DIR="/Users/villadora/.cevm"
 [ -s "$CEVM_DIR/cevm.sh" ] && . "$CEVM_DIR/cevm.sh"  # Loads cevm
+
+
+

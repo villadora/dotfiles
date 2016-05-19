@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+if [[ -z "$1" ]];then
+    DIR="."
+elif [[ -z "$2" ]];then
+    REVRANGE=""
+    DIR=$1
+else
+    REVRANGE=$1
+    DIR=$2
+fi
+
+GARGS=
+
+git diff -w --numstat ${REVRANGE} ${DIR}  | cut -f 1 | awk '{s+=$1} END {print "total changes: " s}'
