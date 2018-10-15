@@ -36,7 +36,7 @@ ZSH_THEME="gentoo" # looks similar to bash
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git ruby git-flow github npm rvm themes brew)
+plugins=(git ruby git-flow github npm rvm themes brew autojump mvn node)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -109,15 +109,14 @@ PATH=$JAVA_HOME/bin:$PATH
 
 # init jenv
 #THIS MUST BE AT THE END OF THE FILE FOR JENV TO WORK!!!
-# [[ -s "$HOME/.jenv/bin/jenv-init.sh" ]] && source "$HOME/.jenv/bin/jenv-init.sh" && source "$HOME/.jenv/commands/completion.sh"
+[[ -s "$HOME/.jenv/bin/jenv-init.sh" ]] && source "$HOME/.jenv/bin/jenv-init.sh" && source "$HOME/.jenv/commands/completion.sh"
 
-eval "$(jenv init -)"
+# eval "$(jenv init -)"
 PATH=$HOME/.jenv/bin:$PATH
-
 
 
 export CEVM_DIR="/Users/villadora/.cevm"
 [ -s "$CEVM_DIR/cevm.sh" ] && . "$CEVM_DIR/cevm.sh"  # Loads cevm
 
-
-
+# antx
+export ANTX_HOME=$HOME/dev/alipay/antx

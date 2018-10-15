@@ -12,7 +12,7 @@ export ANDROID_HOME=/usr/local/Cellar/android-sdk/24.3.4
 export GOPATH=$HOME/dev/gopath
 
 # Homebrew
-export HOMEBREW_GITHUB_API_TOKEN="14dfae85812adbcffe896ce6ad5dbb5c25360909"
+export HOMEBREW_GITHUB_API_TOKEN="be804c756700b3089b58f570c149bf9e0d2726ff"
 
 # set editor to emacs style
 EDITOR=emacs
@@ -31,9 +31,22 @@ fi
 readonly OS
 
 
+# kdb q
+export QHOME="~/.dotfiles/bin/q"
+export PATH=$PATH:$QHOME/m32
+
+
 
 # add z cmd
 source ~/.dotfiles/bash/z/z.sh
 
 
-function mountAndroid { hdiutil attach ~/dev/vms/android.dmg.sparseimage -mountpoint /Volumes/android; }
+# function mountAndroid { hdiutil attach ~/dev/vms/android.dmg.sparseimage -mountpoint /Volumes/android; }
+
+export PYENV_ROOT=/usr/local/var/pyenv
+if which pyenv > /dev/null; then
+    eval "$(pyenv init -)";
+fi
+
+# virtual env
+source ~/.dotfiles/virtualenv-autoenv.sh

@@ -26,7 +26,11 @@ if [[ -n "$u" ]]; then
 fi
 
 if [[ -n "$REV" ]];then
-    GARGS="$GARGS $REV..HEAD "
+    if [[ $REV =~ .*\.\.* ]];then
+        GARGS="$GARGS $REV "
+    else
+        GARGS="$GARGS $REV..HEAD "
+    fi
 fi
 
 if [[ -z "$GARGS" ]];then

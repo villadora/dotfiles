@@ -36,3 +36,6 @@ if [ -f ~/.bash_custom ]; then
 fi
 export PATH="/Users/villadora/dev/sofa:$PATH"
 source /Users/villadora/dev/sofa/resources/completion/bash_autocomplete
+
+#THIS MUST BE AT THE END OF THE FILE FOR JENV TO WORK!!!
+[[ -s "/Users/villadora/.jenv/bin/jenv-init.sh" ]] && source "/Users/villadora/.jenv/bin/jenv-init.sh" && source "/Users/villadora/.jenv/commands/completion.sh"

@@ -14,10 +14,13 @@ auto-save-list
 .Trash
 Thumb.db
 *.imi
+.java-version
 *.iml
 #.idea/**/*
 gradle/
 gradlew
 gradlew.bat
-.idea
+.idea/
 target
+infer_out/
+infer_out/*

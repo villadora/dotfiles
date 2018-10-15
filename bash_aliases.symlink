@@ -66,4 +66,8 @@ alias sshzu='function __sshzu() { ssh -t $* "export LANG=zh_CN.utf8;bash"; unset
 
 
 # docker alias
-alias docker-run-default=eval "$(docker-machine env default)"
+alias docker-run-default='eval "$(docker-machine env default)"'
+
+
+# kdb+ q
+alias q='rlwrap -c -r q'

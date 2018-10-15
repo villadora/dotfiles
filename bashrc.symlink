@@ -108,3 +108,4 @@ MANPATH=$MANPATH:/usr/share/man:/usr/local/share/man
 
 #THIS MUST BE AT THE END OF THE FILE FOR JENV TO WORK!!!
 #[[ -s "$HOME/.jenv/bin/jenv-init.sh" ]] && source "$HOME/.jenv/bin/jenv-init.sh" && source "$HOME/.jenv/commands/completion.sh"
+export PYTHONPATH=$PYTHONPATH:$PWD

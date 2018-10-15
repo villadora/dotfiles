@@ -25,6 +25,21 @@
 	diffa = diff --cached --color
   dsf = "!git diff --color $@ | diff-so-fancy"
   diffk = difftool -y -t Kaleidoscope
+	st = status
+	co = checkout
+	st = status
+	st = status
+	co = checkout
+	st = status
+	co = checkout
+	st = status
+	st = status
+	co = checkout
+	st = status
+	co = checkout
+	st = status
+	co = checkout
+	st = status
 [core]
 	editor = emacsclient -nw
 	autocrlf = input
@@ -52,3 +67,5 @@
 	path = 
 [difftool "Kaleidoscope"]
   cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[commit]
+	template = /Users/villadora/.stCommitMsg
