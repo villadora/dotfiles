@@ -5,11 +5,15 @@ PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/sbin:/usr/sbin:/usr/local/git
 # add commands to PATH
 PATH=$HOME/bin:$PATH:$HOME/.dotfiles/bin
 
+# add mysql commands 
+PATH=$PATH:/usr/local/mysql/bin
+
+
 # Android Home
 export ANDROID_HOME=/usr/local/Cellar/android-sdk/24.3.4
 
 # GOPATH
-export GOPATH=$HOME/dev/gopath
+export GOPATH=$HOME/dev/go
 
 # Homebrew
 export HOMEBREW_GITHUB_API_TOKEN="be804c756700b3089b58f570c149bf9e0d2726ff"

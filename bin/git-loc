@@ -1,12 +1,17 @@
 #!/bin/bash
 
-while getopts ":u:" o; do
+while getopts ":u:a:" o; do
     case "${o}" in 
         u)
             u=${OPTARG}
             ;;
+	a)
+	    a=1
+	   ;;
     esac
 done
+
+echo "$a"
 
 shift $((OPTIND-1))
 
@@ -21,6 +26,8 @@ fi
 
 GARGS=
 
+
+
 if [[ -n "$u" ]]; then
     GARGS="$GARGS --author=$u "
 fi
@@ -33,7 +40,10 @@ if [[ -n "$REV" ]];then
     fi
 fi
 
-if [[ -z "$GARGS" ]];then
+
+if [[ -n "$a" ]]; then
+  git log --format='%aN' | sort -u | while read name; do echo -en "$name\t"; git log --author="$name" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -; done
+elif [[ -z "$GARGS" ]];then
     echo "total lines: "`git ls-files "$DIR" | xargs cat | wc -l`
 else
     git log --pretty=tformat: --numstat ${GARGS} -- ${DIR} | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "\tlines added:\t%s\n\tlines removed:\t%s\n\ttotal loc:\t%s\n", add, subs, loc}' -
