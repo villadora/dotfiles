@@ -24,3 +24,7 @@ gradlew.bat
 target
 infer_out/
 infer_out/*
+.mvn/
+.mvn/*
+mvnw
+mvnw.cmd

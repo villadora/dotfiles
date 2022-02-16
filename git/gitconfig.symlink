@@ -1,6 +1,6 @@
 [user]
 	name = 丹木
-	email = villagao.gw@alibaba-inc.com
+	email = villagao.gw@antfin.com
 [alias]
 	last = cat-file commit HEAD
 	find = lost = fsck --lost-found
@@ -43,7 +43,7 @@
 [core]
 	editor = emacsclient -nw
 	autocrlf = input
-	excludesfile = /Users/villadora/.gitignore_global
+	excludesfile = ~/.gitignore_global
 [color]
 	branch = auto
 	diff = auto
@@ -68,4 +68,4 @@
 [difftool "Kaleidoscope"]
   cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 [commit]
-	template = /Users/villadora/.stCommitMsg
+	template = ~/.stCommitMsg

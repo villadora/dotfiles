@@ -1,2 +1,3 @@
 # Add common profile configs
 source ~/.dotfiles/profile_common.sh
+export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"

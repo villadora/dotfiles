@@ -87,7 +87,9 @@ unbind n
 unbind p
 #bind -r C-h previous-window # select previous window
 #bind -r C-l next-window     # select next window
-#bind Tab last-window        # move to last active window
+bind -n C-[ previous-window # select previous window
+bind -n C-] next-window     # select next window
+bind Tab last-window        # move to last active window
 
 # toggle mouse
 bind m run "cut -c3- ~/.tmux.conf | sh -s _toggle_mouse"
@@ -164,6 +166,33 @@ if '[ -f ~/.tmux.conf.local ]' 'source ~/.tmux.conf.local'
 # -- 8< ------------------------------------------------------------------------
 
 run 'cut -c3- ~/.tmux.conf | sh -s _apply_configuration'
+
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+
+# Other examples:
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-open'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'tmux-plugins/tmux-logging' 
+
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run -b '~/.tmux/plugins/tpm/tpm'
+
+# plugin configs
+
+set -g @resurrect-processes 'ssh'
+set -g @resurrect-capture-pane-contents 'on'
+
+
+
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '30'
+set -g @continuum-boot-options 'iterm,fullscreen'
+
 
 
 # EOF

@@ -71,3 +71,13 @@ alias docker-run-default='eval "$(docker-machine env default)"'
 
 # kdb+ q
 alias q='rlwrap -c -r q'
+
+
+# code gated
+alias mr="java -jar  ${HOME}/bin/Gated-checkin-client.one-jar.jar"
+
+# pana
+alias pana="java -jar ${HOME}/dev/alipay/pass-analysis/dist/pana-0.0.1.jar"
+
+# init mvn wrapper
+alias mvn-init-wrapper="mvn -N io.takari:maven:wrapper"

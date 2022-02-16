@@ -1,0 +1,29 @@
+# Local
+##
+# Host Database
+#
+# DNS
+# 30.14.129.2
+# 30.32.160.31
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
+127.0.0.1	localhost ali-084672.local
+255.255.255.255	broadcasthost
+::1             localhost
+#10.244.80.98 confreg-pool
+127.0.0.1 account.jetbrains.com
+127.0.0.1 lark-transtool.dev.alipay.net
+11.165.152.235 antvip-pool
+11.165.153.130  zonemng-pool
+45.113.40.147   ischeduler-99-1.alipay.com
+100.88.150.174 ifcidentitycloudus-eu95-59.sggz00b.dev.alipay.net
+100.88.150.174 ifcidentitycloudus.stable.alipay.net
+#10.244.80.98 confreg.sit.alipay.net
+#10.244.32.51 confreg.sit.alipay.net
+#110.75.240.131 zonemng-pool 
+#106.11.167.140 zonemng-pool
+#199.27.79.249  cloud-cdn-digitalocean-com.global.ssl.fastly.net
+
+11.166.18.108	confreg.sit.alipay.net
+11.166.18.108	confreg-pool

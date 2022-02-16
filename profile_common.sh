@@ -8,6 +8,8 @@ PATH=$HOME/bin:$PATH:$HOME/.dotfiles/bin
 # add mysql commands 
 PATH=$PATH:/usr/local/mysql/bin
 
+# add brew commands 
+PATH=$PATH:/opt/homebrew/bin
 
 # Android Home
 export ANDROID_HOME=/usr/local/Cellar/android-sdk/24.3.4
