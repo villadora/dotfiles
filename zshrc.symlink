@@ -153,17 +153,37 @@ PATH=$GOPATH/bin:$PATH
 
 MANPATH=$MANPATH:/usr/share/man:/usr/local/share/man
 
-# init java env
-export JAVA_HOME="$(/usr/libexec/java_home)"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# jenv
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+
+export JAVA_HOME="$(/usr/libexec/java_home -v 1.8.0_291)"
 PATH=$JAVA_HOME/bin:$PATH
 
-# init jenv
-#THIS MUST BE AT THE END OF THE FILE FOR JENV TO WORK!!!
-[[ -s "$HOME/.jenv/bin/jenv-init.sh" ]] && source "$HOME/.jenv/bin/jenv-init.sh" && source "$HOME/.jenv/commands/completion.sh"
 
-# eval "$(jenv init -)"
-PATH=$HOME/.jenv/bin:$PATH
+PATH=$HOME/.npm-global/bin:$PATH
 
-# completions
-fpath=(~/.zsh/completions $fpath) 
-autoload -U compinit && compinit
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/villa/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/villa/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/villa/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/villa/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+
+## jetbrain
+___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"
+___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi

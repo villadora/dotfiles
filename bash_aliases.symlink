@@ -1,4 +1,3 @@
-
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -59,7 +58,7 @@ elif [[ "${OS}" == "mac" ]]; then
 fi
 
 # jenv alias
-alias jenv_set_java_home='export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"'
+# alias jenv_set_java_home='export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"'
 
 # ssh alias
 alias sshzu='function __sshzu() { ssh -t $* "export LANG=zh_CN.utf8;bash"; unset -f __sshzu; }; __sshzu'
@@ -79,5 +78,4 @@ alias mr="java -jar  ${HOME}/bin/Gated-checkin-client.one-jar.jar"
 # pana
 alias pana="java -jar ${HOME}/dev/alipay/pass-analysis/dist/pana-0.0.1.jar"
 
-# init mvn wrapper
-alias mvn-init-wrapper="mvn -N io.takari:maven:wrapper"
+

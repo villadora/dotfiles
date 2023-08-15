@@ -11,6 +11,12 @@ PATH=$PATH:/usr/local/mysql/bin
 # add brew commands 
 PATH=$PATH:/opt/homebrew/bin
 
+
+# init java env
+export JAVA_HOME="$(/usr/libexec/java_home -v 1.8.0_291)"
+PATH=$JAVA_HOME/bin:$PATH
+
+
 # Android Home
 export ANDROID_HOME=/usr/local/Cellar/android-sdk/24.3.4
 

@@ -28,3 +28,4 @@ infer_out/*
 .mvn/*
 mvnw
 mvnw.cmd
+jenvrc
