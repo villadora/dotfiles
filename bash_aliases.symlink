@@ -24,8 +24,8 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 alias mv="mv -i"
 alias cp="cp -i"
-alias ec="emacsclient -nw"
-alias g++="g++ -Wall -std=c++98 -pedantic "
+alias ec="emacs -nw"
+#alias g++="g++ -Wall -std=c++98 -pedantic "
 
 
 # git alias
@@ -34,15 +34,6 @@ alias ga="git add"
 alias gca="git commit -am"
 alias gst="git st"
 alias gl="git lg"
-
-
-
-
-# svn alias
-alias snv="svn"
-
-
-alias ndh="node --harmony"
 
 if [[ "${OS}" == "linux" ]]; then
     alias ls='ls --color=auto'
@@ -66,16 +57,3 @@ alias sshzu='function __sshzu() { ssh -t $* "export LANG=zh_CN.utf8;bash"; unset
 
 # docker alias
 alias docker-run-default='eval "$(docker-machine env default)"'
-
-
-# kdb+ q
-alias q='rlwrap -c -r q'
-
-
-# code gated
-alias mr="java -jar  ${HOME}/bin/Gated-checkin-client.one-jar.jar"
-
-# pana
-alias pana="java -jar ${HOME}/dev/alipay/pass-analysis/dist/pana-0.0.1.jar"
-
-

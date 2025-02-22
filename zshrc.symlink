@@ -66,10 +66,8 @@ ZSH_THEME="gentoo" # looks similar to bash
 plugins=(
     git
     github
-    rvm
     brew
     autojump
-    mvn
     history-substring-search
 )
 
@@ -90,7 +88,7 @@ source $ZSH/oh-my-zsh.sh
 # fi
 
 export ALTERNATE_EDITOR=""
-export EDITOR="emacsclient -nw"
+export EDITOR="emacs -nw"
 
 # use emacs style key
 bindkey -e
@@ -113,7 +111,7 @@ bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
 
 # Customize to your needs...
-PROMPT='%(!.%{$fg_bold[red]%}.%{$fg_bold[yellow]%}$ %n%{$fg_bold[white]%}@)%{$fg_bold[green]%}%m  %{$fg_bold[magenta]%}%(!.%1~.%~) %{$fg_bold[white]%}~zsh [%!] %{$fg_bold[cyan]%}$(git_prompt_info)%_$(prompt_char)%{$reset_color%} '
+# PROMPT='%(!.%{$fg_bold[red]%}.%{$fg_bold[yellow]%}$ %n%{$fg_bold[white]%}@)%{$fg_bold[green]%}%m  %{$fg_bold[magenta]%}%(!.%1~.%~) %{$fg_bold[white]%}~zsh [%!] %{$fg_bold[cyan]%}$(git_prompt_info)%_$(prompt_char)%{$reset_color%} '
 
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
@@ -134,56 +132,22 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$PATH:$HOME/bin # add script tools
-
-PATH=$PATH:/usr/local/share/python # add python bin
-
-PATH=$PATH:/usr/local/opt/go/libexec/bin # add go path
-
-[[ -s "$HOME/.nvm/nvm.sh" ]] && . "$HOME/.nvm/nvm.sh"  # This loads NVM into a shell session
-
 PATH=$HOME/.dotfiles/bin:$HOME/bin:$PATH
 
-export GOROOT_BOOTSTRAP=/usr/local/opt/go
-export GOPATH=$HOME/dev/libs/go
-
-# Add $GOPATH/bin to path
-PATH=$GOPATH/bin:$PATH
-
 MANPATH=$MANPATH:/usr/share/man:/usr/local/share/man
-
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # jenv
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
 
-export JAVA_HOME="$(/usr/libexec/java_home -v 1.8.0_291)"
-PATH=$JAVA_HOME/bin:$PATH
+# export JAVA_HOME="$(/usr/libexec/java_home -v 1.8.0_291)"
+# PATH=$JAVA_HOME/bin:$PATH
 
 
 PATH=$HOME/.npm-global/bin:$PATH
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/villa/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/villa/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/villa/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/villa/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
 
 ## jetbrain
-___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"
-___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
+#___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"
+#___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
