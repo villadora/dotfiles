@@ -130,12 +130,19 @@ install_rvm() {
         curl -#L https://get.rvm.io | bash -s stable --autolibs=3 --ruby
     fi
 }
+fi
+
+install_via_brew() {
+    brew install z  
+}
+
 
 setup_gitconfig
 install_dotfiles
 
+install_via_brew
+
 install_nvm
-# install_rvm
 
 
 

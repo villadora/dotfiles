@@ -28,9 +28,6 @@ fi
 readonly OS
 
 
-# add z cmd
-source ~/.dotfiles/bash/z/z.sh
-
 
 export PYENV_ROOT=/usr/local/var/pyenv
 if which pyenv > /dev/null; then
