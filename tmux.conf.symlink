@@ -176,19 +176,23 @@ set -g @plugin 'b0o/tmux-autoreload'
 set -g @plugin 'tmux-plugins/tmux-battery'
 set -g @plugin 'tmux-plugins/tmux-cpu'
 
-
+set -g @plugin 'sainnhe/tmux-fzf'
 set -g @plugin 'jaclu/tmux-menus'
 set -g @plugin 'tmux-plugins/tmux-cowboy'
 set -g @plugin 'tmux-plugins/tmux-sidebar'
+set -g @plugin 'ofirgall/tmux-window-name'
 
 
 
-# Other examples:
+
+# Other plugins
+set -g @plugin 'nhdaly/tmux-better-mouse-mode'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @plugin 'tmux-plugins/tmux-open'
 set -g @plugin 'tmux-plugins/tmux-yank'
-set -g @plugin 'tmux-plugins/tmux-logging' 
+set -g @plugin 'tmux-plugins/tmux-logging'
+
 
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)

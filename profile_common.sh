@@ -28,10 +28,12 @@ fi
 readonly OS
 
 
+# pyenv
+export PYENV_ROOT="/usr/local/var/pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
 
-export PYENV_ROOT=/usr/local/var/pyenv
 if which pyenv > /dev/null; then
-    eval "$(pyenv init -)";
+    eval "$(pyenv init --path)"
 fi
 
 # virtual env

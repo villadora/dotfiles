@@ -1,6 +1,6 @@
 [user]
-	name = 丹木
-	email = villagao.gw@antfin.com
+	name = villagao
+	email = villa.g@paymonade.tech
 [alias]
 	last = cat-file commit HEAD
 	find = lost = fsck --lost-found

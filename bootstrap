@@ -118,7 +118,7 @@ install_dotfiles () {
 install_nvm() {
     if ! [ -f "$HOME/.nvm/nvm.sh" ]; then
         info "Install NVM"
-        git clone git://github.com/creationix/nvm.git "$HOME/.nvm"
+	      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
         source "$HOME/.nvm/nvm.sh"
     fi
 }
@@ -130,7 +130,15 @@ install_rvm() {
         curl -#L https://get.rvm.io | bash -s stable --autolibs=3 --ruby
     fi
 }
-fi
+
+install_tmux_plugins() {
+    if ![ -f "$HOME/.tmux/plugins/tpm/tpm" ]; then
+        info "Install TPM"
+        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+        # press PREFIX+I(capital i) in tmux to install all plugins
+    fi
+}
+
 
 install_via_brew() {
     brew install z  
@@ -142,6 +150,7 @@ install_dotfiles
 
 install_via_brew
 
+install_tpm
 install_nvm
 
 
