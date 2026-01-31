@@ -185,3 +185,6 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# Tokens
+source "$HOME/.dotfiles/tokens_env.sh"

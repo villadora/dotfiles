@@ -3,3 +3,4 @@ local_env.sh
 *.swp
 *~
 */*.old
+tokens_env.sh
