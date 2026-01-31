@@ -5,8 +5,11 @@ PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/sbin:/usr/sbin:/usr/local/git
 # add commands to PATH
 PATH=$HOME/bin:$PATH:$HOME/.dotfiles/bin
 
-# add brew commands 
+# add brew commands
 PATH=$PATH:/opt/homebrew/bin
+
+# add pipx commands
+PATH=$PATH:$HOME/.local/bin
 
 # Homebrew
 export HOMEBREW_GITHUB_API_TOKEN="be804c756700b3089b58f570c149bf9e0d2726ff"
@@ -36,5 +39,16 @@ if which pyenv > /dev/null; then
     eval "$(pyenv init --path)"
 fi
 
+# jenv
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+
+
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
 # virtual env
-source ~/.dotfiles/virtualenv-autoenv.sh
+#source ~/.dotfiles/virtualenv-autoenv.sh

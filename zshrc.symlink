@@ -67,6 +67,7 @@ ZSH_THEME="robbyrussell"
 plugins=(
     git
     github
+    git-extras
     brew
     history
     ssh
@@ -76,6 +77,19 @@ plugins=(
     pyenv
     autoswitch_virtualenv
     history-substring-search
+    docker
+    docker-compose
+    npm
+    nvm
+    pip
+    pyenv
+    autoswitch_virtualenv
+    virtualenv
+    virtualenvwrapper
+#    poetry
+#    poetry-env
+#    gradle
+    mvn
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -116,6 +130,8 @@ bindkey -e
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
+# Enable Emacs-like key bindings in Zsh
+
 
 # Customize to your needs...
 # PROMPT='%(!.%{$fg_bold[red]%}.%{$fg_bold[yellow]%}$ %n%{$fg_bold[white]%}@)%{$fg_bold[green]%}%m  %{$fg_bold[magenta]%}%(!.%1~.%~) %{$fg_bold[white]%}~zsh [%!] %{$fg_bold[cyan]%}$(git_prompt_info)%_$(prompt_char)%{$reset_color%} '
@@ -143,10 +159,6 @@ PATH=$PATH:$HOME/bin:$HOME/.local/bin # add script tools
 PATH=$HOME/.dotfiles/bin:$HOME/bin:$PATH
 
 MANPATH=$MANPATH:/usr/share/man:/usr/local/share/man
-
-# jenv
-export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)"
 
 # export JAVA_HOME="$(/usr/libexec/java_home -v 1.8.0_291)"
 # PATH=$JAVA_HOME/bin:$PATH

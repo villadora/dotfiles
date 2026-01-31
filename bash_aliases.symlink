@@ -24,7 +24,8 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 alias mv="mv -i"
 alias cp="cp -i"
-alias ec="emacs -nw"
+alias emacs="emacs -nw"
+alias ec="emacsclient -nw"
 #alias g++="g++ -Wall -std=c++98 -pedantic "
 
 
@@ -53,6 +54,7 @@ fi
 
 # ssh alias
 alias sshzu='function __sshzu() { ssh -t $* "export LANG=zh_CN.utf8;bash"; unset -f __sshzu; }; __sshzu'
+
 
 
 # docker alias
