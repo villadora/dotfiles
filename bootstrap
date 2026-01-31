@@ -141,8 +141,11 @@ install_tmux_plugins() {
 
 
 install_via_brew() {
-    brew install z  
+    brew install z
+    brew install git-extras
+    brew install newman
 }
+
 
 
 setup_gitconfig

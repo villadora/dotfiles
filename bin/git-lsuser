@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+
+git log --author="Razorback" --since="1 month ago" --date=short \
+--pretty="%ad" --numstat | \
+awk '
+/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/ {date=$1}
+NF==3 {ins[date]+=$1; del[date]+=$2}
+END {
+    for (d in ins) printf "%s %d\n", d, ins[d] + del[d]
+}' | sort

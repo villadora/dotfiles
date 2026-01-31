@@ -7,7 +7,13 @@
 
 # -- general -------------------------------------------------------------------
 
-set -g default-terminal "screen-256color" # colors!
+# set -g default-terminal "screen-256color" # colors!
+set -g default-terminal "tmux-256color"
+set -as terminal-overrides ',xterm-256color:Tc'
+set -g alternate-screen on
+set -g remain-on-exit off
+
+
 setw -g xterm-keys on
 set -s escape-time 10                     # faster command sequences
 set -sg repeat-time 600                   # increase repeat timeout
@@ -61,9 +67,10 @@ bind C-c new-session
 bind C-f command-prompt -p find-session 'switch-client -t %%'
 
 # split current window horizontally
-bind - split-window -v
+bind - split-window -v -c "#{pane_current_path}"
 # split current window vertically
-bind _ split-window -h
+bind | split-window -h -c "#{pane_current_path}"
+
 
 # pane navigation
 bind -r h select-pane -L  # move left
@@ -87,8 +94,8 @@ unbind n
 unbind p
 #bind -r C-h previous-window # select previous window
 #bind -r C-l next-window     # select next window
-bind -n C-[ previous-window # select previous window
-bind -n C-] next-window     # select next window
+bind -n C-] previous-window # select previous window
+bind -n C-\\ next-window     # select next window
 bind Tab last-window        # move to last active window
 
 # toggle mouse
@@ -184,9 +191,8 @@ set -g @plugin 'ofirgall/tmux-window-name'
 
 
 
-
 # Other plugins
-set -g @plugin 'nhdaly/tmux-better-mouse-mode'
+# set -g @plugin 'nhdaly/tmux-better-mouse-mode'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @plugin 'tmux-plugins/tmux-open'

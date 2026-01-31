@@ -55,3 +55,5 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 ___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
+
+[ -s "/Users/villadora/.web3j/source.sh" ] && source "/Users/villadora/.web3j/source.sh"

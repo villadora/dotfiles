@@ -139,7 +139,7 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-PATH=$PATH:$HOME/bin # add script tools
+PATH=$PATH:$HOME/bin:$HOME/.local/bin # add script tools
 PATH=$HOME/.dotfiles/bin:$HOME/bin:$PATH
 
 MANPATH=$MANPATH:/usr/share/man:/usr/local/share/man
@@ -161,6 +161,27 @@ if [ -f "$HOME/.dotfiles/local_env.sh" ]; then
 fi
 
 
+if [ -f "$HOME/.zshenv" ]; then
+    source "$HOME/.zshenv"
+fi
+
+
 ## jetbrain
 #___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"
 #___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
+
+# AsyncAPI CLI Autocomplete
+
+ASYNCAPI_AC_ZSH_SETUP_PATH=/Users/villadora/Library/Caches/@asyncapi/cli/autocomplete/zsh_setup && test -f $ASYNCAPI_AC_ZSH_SETUP_PATH && source $ASYNCAPI_AC_ZSH_SETUP_PATH; # asyncapi autocomplete setup
+
+
+
+[ -s "/Users/villadora/.web3j/source.sh" ] && source "/Users/villadora/.web3j/source.sh"
+
+# pnpm
+export PNPM_HOME="/Users/villadora/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

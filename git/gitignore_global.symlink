@@ -29,3 +29,11 @@ infer_out/*
 mvnw
 mvnw.cmd
 jenvrc
+*.code-workspace
+.claude/
+.vscode/
+localmock/
+*.pyc
+GEMINI.md
+AGENTS.md
+PULL_REQUEST_TEMPLATE.md

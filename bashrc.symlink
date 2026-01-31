@@ -100,3 +100,11 @@ PATH=$PATH:/usr/local/share/python # add python bin
 MANPATH=$MANPATH:/usr/share/man:/usr/local/share/man
 
 export PYTHONPATH=$PYTHONPATH:$PWD
+
+# AsyncAPI CLI Autocomplete
+
+ASYNCAPI_AC_BASH_SETUP_PATH=/Users/villadora/Library/Caches/@asyncapi/cli/autocomplete/bash_setup && test -f $ASYNCAPI_AC_BASH_SETUP_PATH && source $ASYNCAPI_AC_BASH_SETUP_PATH; # asyncapi autocomplete setup
+
+
+
+[ -s "/Users/villadora/.web3j/source.sh" ] && source "/Users/villadora/.web3j/source.sh"
