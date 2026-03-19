@@ -37,3 +37,8 @@ localmock/
 GEMINI.md
 AGENTS.md
 PULL_REQUEST_TEMPLATE.md
+GUIDE.md
+local_tasks/
+local_docs/
+pubqa.sh
+skills-lock.json
