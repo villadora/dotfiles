@@ -90,14 +90,8 @@ plugins=(
     npm
     nvm
     pip
-    pyenv
-    autoswitch_virtualenv
     virtualenv
     virtualenvwrapper
-#    poetry
-#    poetry-env
-#    gradle
-    mvn
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -181,10 +175,6 @@ if [ -f "$HOME/.dotfiles/local_env.sh" ]; then
 fi
 
 
-if [ -f "$HOME/.zshenv" ]; then
-    source "$HOME/.zshenv"
-fi
-
 
 ## jetbrain
 #___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"
@@ -192,14 +182,14 @@ fi
 
 # AsyncAPI CLI Autocomplete
 
-ASYNCAPI_AC_ZSH_SETUP_PATH=/Users/villadora/Library/Caches/@asyncapi/cli/autocomplete/zsh_setup && test -f $ASYNCAPI_AC_ZSH_SETUP_PATH && source $ASYNCAPI_AC_ZSH_SETUP_PATH; # asyncapi autocomplete setup
+ASYNCAPI_AC_ZSH_SETUP_PATH="$HOME/Library/Caches/@asyncapi/cli/autocomplete/zsh_setup" && test -f $ASYNCAPI_AC_ZSH_SETUP_PATH && source $ASYNCAPI_AC_ZSH_SETUP_PATH; # asyncapi autocomplete setup
 
 
 
-[ -s "/Users/villadora/.web3j/source.sh" ] && source "/Users/villadora/.web3j/source.sh"
+[ -s "$HOME/.web3j/source.sh" ] && source "$HOME/.web3j/source.sh"
 
 # pnpm
-export PNPM_HOME="/Users/villadora/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -208,3 +198,10 @@ esac
 
 # Tokens
 source "$HOME/.dotfiles/tokens_env.sh"
+
+# Claude
+source ~/.clauderc
+export PATH="$HOME/.local/bin:$PATH"
+
+# Cargo (Rust)
+. "$HOME/.cargo/env"

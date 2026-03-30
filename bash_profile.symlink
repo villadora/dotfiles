@@ -19,6 +19,9 @@ PATH=$PATH:$HOME/.dotfiles/bin:$HOME/bin
 # add common profile configs
 source ~/.dotfiles/profile_common.sh
 
+# Tokens (sensitive env vars)
+source "$HOME/.dotfiles/tokens_env.sh"
+
 # Functions
 man() { command man "$@" | less; }
 
@@ -27,9 +30,6 @@ source ~/.dotfiles/bash/git-completion.sh
 source ~/.dotfiles/bash/git-prompt.sh
 source ~/.dotfiles/bash/hub.bash_completion.sh
 
-if [ -f ~/.bashrc ]; then
-   source ~/.bashrc
-fi
 
 if [ -f ~/.bash_custom ]; then
     source ~/.bash_custom
@@ -41,14 +41,14 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/villa/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('$HOME/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/Users/villa/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/villa/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "$HOME/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/Users/villa/anaconda3/bin:$PATH"
+        export PATH="$HOME/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -56,4 +56,5 @@ unset __conda_setup
 
 ___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
 
-[ -s "/Users/villadora/.web3j/source.sh" ] && source "/Users/villadora/.web3j/source.sh"
+[ -s "$HOME/.web3j/source.sh" ] && source "$HOME/.web3j/source.sh"
+. "$HOME/.cargo/env"
