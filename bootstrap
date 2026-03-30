@@ -103,6 +103,14 @@ install_dotfiles () {
   done
 }
 
+install_tmux_conf_local() {
+  if ! [ -f "$HOME/.tmux.conf.local" ]; then
+    info "Create ~/.tmux.conf.local"
+    touch "$HOME/.tmux.conf.local"
+    success 'tmux.conf.local'
+  fi
+}
+
 install_homebrew() {
   if ! command -v brew >/dev/null 2>&1; then
     info "Install Homebrew"
@@ -184,6 +192,7 @@ install_via_brew() {
 # Run installations in order
 setup_gitconfig
 install_dotfiles
+install_tmux_conf_local
 install_homebrew
 install_oh_my_zsh
 install_pyenv
