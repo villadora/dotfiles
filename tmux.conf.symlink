@@ -215,8 +215,6 @@ set -g @resurrect-capture-pane-contents 'on'
 
 set -g @continuum-restore 'on'
 set -g @continuum-save-interval '30'
-set -g @continuum-boot-options 'iterm,fullscreen'
-
 
 
 # EOF
