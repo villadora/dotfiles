@@ -206,3 +206,15 @@ export PATH="$HOME/.local/bin:$PATH"
 # Cargo (Rust)
 . "$HOME/.cargo/env"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Proxy functions
+function proxy_on() {
+    export http_proxy=http://127.0.0.1:7890
+    export https_proxy=$http_proxy
+    echo -e "终端代理已开启。"
+}
+
+function proxy_off(){
+    unset http_proxy https_proxy
+    echo -e "终端代理已关闭。"
+}
