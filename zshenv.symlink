@@ -1,0 +1,17 @@
+# .zshenv - loaded for all zsh invocations
+# Keep this file minimal - it must not produce output or errors
+
+# Set语言
+export LANG=en_US.UTF-8
+
+# Load local env tokens (contains API keys etc)
+if [ -f "$HOME/.tokens_env.sh" ]; then
+  source "$HOME/.tokens_env.sh"
+fi
+
+# Load local env (contains PATH modifications etc)
+if [ -f "$HOME/.local_env.sh" ]; then
+  source "$HOME/.local_env.sh"
+fi
+
+export HAPPY_SERVER_URL=https://happy.villagao.top
