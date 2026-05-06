@@ -31,6 +31,15 @@ run () {
   return 1
 }
 
+# Global action flags
+action_overwrite_all=false
+action_backup_all=false
+action_skip_all=false
+action_upgrade_all=false
+action_upgrade_git_all=false
+action_upgrade_brew_all=false
+action_no_all=false
+
 setup_gitconfig () {
   if ! [ -f git/gitconfig.symlink ]; then
     info 'setup gitconfig'
@@ -55,47 +64,36 @@ link_files () {
 install_dotfiles () {
   info 'installing dotfiles'
 
-  overwrite_all=false
-  backup_all=false
-  skip_all=false
+  # Only ask once for all existing files
+  if [ "$action_overwrite_all" == "false" ] && [ "$action_backup_all" == "false" ] && [ "$action_skip_all" == "false" ]; then
+    user "File already exists, what do you want to do? [s]kip all, [o]verwrite all, [b]ackup all: "
+    read -n 1 action
+    echo ''
+
+    case "$action" in
+      o|O) action_overwrite_all=true;;
+      b|B) action_backup_all=true;;
+      s|S|*) action_skip_all=true;;
+    esac
+  fi
 
   for source in `find $DOTFILES_ROOT -maxdepth 2 -name \*.symlink`
   do
     dest="$HOME/.`basename \"${source%.*}\"`"
 
     if [ -f "$dest" ] || [ -d "$dest" ]; then
-      overwrite=false
-      backup=false
-      skip=false
-
-      if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]; then
-        user "File already exists: `basename $source`, what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
-        read -n 1 action
-        echo ''
-
-        case "$action" in
-          o) overwrite=true;;
-          O) overwrite_all=true;;
-          b) backup=true;;
-          B) backup_all=true;;
-          s) skip=true;;
-          S) skip_all=true;;
-          *) ;;
-        esac
-      fi
-
-      if [ "$overwrite" == "true" ] || [ "$overwrite_all" == "true" ]; then
+      if [ "$action_overwrite_all" == "true" ]; then
         rm -rf "$dest"
         success "removed $dest"
         link_files "$source" "$dest"
-      elif [ "$backup" == "true" ] || [ "$backup_all" == "true" ]; then
+      elif [ "$action_backup_all" == "true" ]; then
         mv "$dest" "$dest.backup"
         success "moved $dest to $dest.backup"
         link_files "$source" "$dest"
-      elif [ "$skip" == "false" ] && [ "$skip_all" == "false" ]; then
-        link_files "$source" "$dest"
-      else
+      elif [ "$action_skip_all" == "true" ]; then
         success "skipped $source"
+      else
+        link_files "$source" "$dest"
       fi
     else
       link_files "$source" "$dest"
@@ -122,56 +120,119 @@ install_homebrew() {
   fi
 }
 
+# Unified upgrade check for all installed software
+# Called once before processing any installed items
+ask_upgrade_all() {
+  if [ "$action_upgrade_all" == "false" ] && [ "$action_no_all" == "false" ]; then
+    info "Checking installed software..."
+    user "Upgrade all? [y]es, [n]o, [N]o for all, [p]artial (brew), [g]it only: "
+    read -n 1 confirm 2>/dev/null || confirm="n"
+    echo ''
+
+    case "$confirm" in
+      y|Y) action_upgrade_git_all=true; action_upgrade_brew_all=true;;
+      p|P) action_upgrade_git_all=false; action_upgrade_brew_all=true;;
+      g|G) action_upgrade_git_all=true; action_upgrade_brew_all=false;;
+      N) action_no_all=true; action_upgrade_git_all=false; action_upgrade_brew_all=false;;
+      *) action_upgrade_git_all=false; action_upgrade_brew_all=false;;
+    esac
+    action_upgrade_all=true
+  fi
+}
+
+git_upgrade() {
+  local path="$1"
+  local name="$2"
+
+  if [ "$action_upgrade_git_all" == "true" ]; then
+    (cd "$path" && git pull origin master 2>/dev/null) && success "  $name upgraded" || fail "  $name upgrade failed"
+    return 0
+  fi
+
+  if [ "$action_no_all" == "true" ]; then
+    success "  $name skipped"
+    return 0
+  fi
+
+  info "  $name already installed"
+  user "  - Upgrade $name? [y]es, [n]o, [N]o for all: "
+  read -n 1 confirm 2>/dev/null || confirm="n"
+  echo ''
+
+  case "$confirm" in
+    y|Y)
+      (cd "$path" && git pull origin master 2>/dev/null) && success "  $name upgraded" || fail "  $name upgrade failed"
+      ;;
+    N)
+      action_no_all=true
+      success "  $name skipped"
+      ;;
+    *)
+      success "  $name skipped"
+      ;;
+  esac
+}
+
+brew_upgrade() {
+  local pkg="$1"
+  local is_cask="${2:-false}"
+
+  if [ "$action_upgrade_brew_all" == "true" ]; then
+    if [ "$is_cask" = "true" ]; then
+      brew upgrade --cask "$pkg" && success "  $pkg upgraded" || fail "  $pkg upgrade failed"
+    else
+      brew upgrade "$pkg" && success "  $pkg upgraded" || fail "  $pkg upgrade failed"
+    fi
+    return 0
+  fi
+
+  if [ "$action_no_all" == "true" ]; then
+    success "  $pkg skipped"
+    return 0
+  fi
+
+  info "  $pkg already installed"
+  user "  - Upgrade $pkg? [y]es, [n]o, [N]o for all: "
+  read -n 1 confirm 2>/dev/null || confirm="n"
+  echo ''
+
+  case "$confirm" in
+    y|Y)
+      if [ "$is_cask" = "true" ]; then
+        brew upgrade --cask "$pkg" && success "  $pkg upgraded" || fail "  $pkg upgrade failed"
+      else
+        brew upgrade "$pkg" && success "  $pkg upgraded" || fail "  $pkg upgrade failed"
+      fi
+      ;;
+    N)
+      action_no_all=true
+      success "  $pkg skipped"
+      ;;
+    *)
+      success "  $pkg skipped"
+      ;;
+  esac
+}
+
 install_oh_my_zsh() {
   if ! [ -d "$HOME/.oh-my-zsh" ]; then
     info "Install Oh My Zsh"
-    run sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    success 'oh-my-zsh'
   else
-    info 'oh-my-zsh already installed'
-    user " - Upgrade oh-my-zsh? [y/N]:"
-    read confirm
-    if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
-      (cd "$HOME/.oh-my-zsh" && git pull origin master)
-      success 'oh-my-zsh upgraded'
-    else
-      success 'oh-my-zsh skipped'
-    fi
+    ask_upgrade_all
+    git_upgrade "$HOME/.oh-my-zsh" "oh-my-zsh"
   fi
 }
 
 install_pyenv() {
   if ! [ -d "$HOME/.pyenv" ]; then
     info "Install pyenv"
-    run git clone https://github.com/pyenv/pyenv.git "$HOME/.pyenv"
+    git clone https://github.com/pyenv/pyenv.git "$HOME/.pyenv" --quiet
     success 'pyenv'
   else
-    info 'pyenv already installed'
-    user " - Upgrade pyenv? [y/N]:"
-    read confirm
-    if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
-      (cd "$HOME/.pyenv" && git pull origin master)
-      success 'pyenv upgraded'
-    else
-      success 'pyenv skipped'
-    fi
-  fi
-}
-
-install_pyenv_virtualenv() {
-  if ! [ -d "$HOME/.pyenv/plugins/pyenv-virtualenv" ]; then
-    info "Install pyenv-virtualenv"
-    run git clone https://github.com/pyenv/pyenv-virtualenv.git "$HOME/.pyenv/plugins/pyenv-virtualenv"
-    success 'pyenv-virtualenv'
-  else
-    info 'pyenv-virtualenv already installed'
-    user " - Upgrade pyenv-virtualenv? [y/N]:"
-    read confirm
-    if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
-      (cd "$HOME/.pyenv/plugins/pyenv-virtualenv" && git pull origin master)
-      success 'pyenv-virtualenv upgraded'
-    else
-      success 'pyenv-virtualenv skipped'
-    fi
+    ask_upgrade_all
+    git_upgrade "$HOME/.pyenv" "pyenv"
   fi
 }
 
@@ -195,123 +256,66 @@ setup_python_env() {
   local current_py=$(pyenv global 2>/dev/null)
   if [ -n "$current_py" ] && [ "$current_py" != "system" ]; then
     info "Current global Python: $current_py"
+    info "Python already configured, skipping"
+    return 0
   fi
 
-  # Show existing virtualenvs
-  if [ -d "$HOME/.pyenv/versions" ]; then
-    local venvs=$(pyenv virtualenvs --bare 2>/dev/null)
-    if [ -n "$venvs" ]; then
-      info "Existing virtualenvs:"
-      echo "$venvs" | while read v; do
-        info "  - $v"
-      done
-    fi
-  fi
-
-  # Check if already has a global Python set up
-  if [ -n "$current_py" ] && [ "$current_py" != "system" ]; then
-    user " - Python $current_py already configured. Install new version? [y/N]:"
-    read confirm
-    if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
-      info "Keeping existing Python setup"
-      return 0
-    fi
-  fi
-
-  # List available Python versions
-  info "Available Python versions:"
-  pyenv install --list 2>/dev/null | grep -E "^\s*[0-9]+\.[0-9]+\.[0-9]+" | head -10
-
-  user " - Enter Python version to install (e.g., 3.12.0) or press Enter to skip:"
-  read python_version
-
-  if [ -n "$python_version" ]; then
-    # Check if already installed
-    if pyenv versions --bare 2>/dev/null | grep -q "^${python_version}$"; then
-      info "Python $python_version already installed"
-    else
-      info "Installing Python $python_version"
-      if pyenv install "$python_version" 2>&1; then
-        success "Python $python_version installed"
-      else
-        fail "Failed to install Python $python_version"
-        return 1
-      fi
-    fi
-
-    # Set global Python version
-    pyenv global "$python_version"
-    success "Set global Python to $python_version"
-
-    # Create default virtualenv (optional)
-    user " - Enter virtualenv name to create (or press Enter to skip):"
-    read venv_name
-    if [ -n "$venv_name" ]; then
-      # Check if virtualenv already exists
-      if pyenv virtualenvs --bare 2>/dev/null | grep -q "^${venv_name}$"; then
-        info "Virtualenv $venv_name already exists, skipping"
-      else
-        pyenv virtualenv "$python_version" "$venv_name"
-        success "Created virtualenv: $venv_name"
-      fi
-    fi
+  # Install default Python version
+  info "Installing default Python 3.12.0"
+  if pyenv install 3.12.0 2>&1; then
+    pyenv global 3.12.0
+    success "Python 3.12.0 installed"
   else
-    info "Skipping Python installation"
+    fail "Failed to install Python"
   fi
 }
 
 install_jenv() {
   if ! [ -d "$HOME/.jenv" ]; then
     info "Install jenv"
-    run git clone https://github.com/jenv/jenv.git "$HOME/.jenv"
+    git clone https://github.com/jenv/jenv.git "$HOME/.jenv" --quiet
     success 'jenv'
   else
-    info 'jenv already installed'
-    user " - Upgrade jenv? [y/N]:"
-    read confirm
-    if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
-      (cd "$HOME/.jenv" && git pull origin master)
-      success 'jenv upgraded'
-    else
-      success 'jenv skipped'
-    fi
+    ask_upgrade_all
+    git_upgrade "$HOME/.jenv" "jenv"
   fi
 }
 
 install_nvm() {
   if ! [ -f "$HOME/.nvm/nvm.sh" ]; then
     info "Install NVM"
-    run curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    export NVM_DIR="$HOME/.nvm"
+    mkdir -p "$NVM_DIR"
+    git clone https://github.com/nvm-sh/nvm.git "$HOME/.nvm" --branch v0.40.3 --single-branch --quiet
     success 'nvm'
   else
-    info 'nvm already installed'
-    user " - Reinstall/upgrade NVM? [y/N]:"
-    read confirm
-    if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
-      run curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-      success 'nvm upgraded'
-    else
-      success 'nvm skipped'
-    fi
+    ask_upgrade_all
+    git_upgrade "$HOME/.nvm" "nvm"
   fi
 }
 
 install_tmux_plugins() {
   if ! [ -f "$HOME/.tmux/plugins/tpm/tpm" ]; then
     info "Install TPM"
-    run git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm --quiet
     success 'tpm'
   else
-    info 'tpm already installed'
-    user " - Upgrade TPM? [y/N]:"
-    read confirm
-    if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
-      (cd "$HOME/.tmux/plugins/tpm" && git pull origin master)
-      success 'tpm upgraded'
-    else
-      success 'tpm skipped'
-    fi
+    ask_upgrade_all
+    git_upgrade "$HOME/.tmux/plugins/tpm" "tpm"
   fi
+}
+
+# Check if app is installed (works for both Homebrew and direct downloads)
+is_app_installed() {
+  local app_name="$1"
+
+  for path in "/Applications/${app_name}.app" "$HOME/Applications/${app_name}.app" "/opt/homebrew/${app_name}.app" "$HOME/opt/homebrew/${app_name}.app"; do
+    if [ -d "$path" ]; then
+      return 0
+    fi
+  done
+
+  return 1
 }
 
 install_via_brew() {
@@ -319,12 +323,133 @@ install_via_brew() {
 
   for pkg in z git-extras newman; do
     if brew list "$pkg" >/dev/null 2>&1; then
-      info "  $pkg already installed, skipping"
+      ask_upgrade_all
+      brew_upgrade "$pkg" false
     else
       info "  installing $pkg"
       brew install "$pkg" && success "  $pkg installed" || fail "  $pkg failed"
     fi
   done
+}
+
+install_homebrew_taps() {
+  info "Install Homebrew taps"
+  if ! brew tap | grep -q "farion1231/ccswitch"; then
+    brew tap farion1231/ccswitch && success "  ccswitch tap" || fail "  ccswitch tap failed"
+  else
+    info "  ccswitch tap already exists, skipping"
+  fi
+}
+
+install_ccswitch() {
+  info "Install ccswitch"
+
+  # Check if tap exists, if not add it
+  if ! brew tap | grep -q "farion1231/ccswitch"; then
+    brew tap farion1231/ccswitch || { fail "  ccswitch tap failed"; return 1; }
+  fi
+
+  # Check if package is installed (cask name is cc-switch with hyphen)
+  if brew list --cask cc-switch >/dev/null 2>&1; then
+    ask_upgrade_all
+    brew_upgrade "cc-switch" true
+  else
+    # Try to install cc-switch
+    if brew install cc-switch 2>/dev/null; then
+      success "  cc-switch installed"
+    else
+      # Check if it's actually installed now
+      if brew list --cask cc-switch >/dev/null 2>&1; then
+        success "  cc-switch already installed"
+      else
+        fail "  cc-switch failed"
+      fi
+    fi
+  fi
+}
+
+install_brew_packages() {
+  info "Install core packages via brew"
+
+  local packages=(
+    "python@3.13"
+    "maven"
+    "gradle"
+    "cmake"
+  )
+
+  for pkg in "${packages[@]}"; do
+    if brew list "$pkg" >/dev/null 2>&1; then
+      ask_upgrade_all
+      brew_upgrade "$pkg" false
+    else
+      info "  installing $pkg"
+      brew install "$pkg" && success "  $pkg installed" || fail "  $pkg failed"
+    fi
+  done
+}
+
+install_brew_casks() {
+  info "Install cask applications"
+
+  local casks=(
+    "warp"
+    "docker-desktop"
+  )
+
+  for pkg in "${casks[@]}"; do
+    # Special handling for docker-desktop: check both brew and direct app installation
+    if [ "$pkg" = "docker-desktop" ]; then
+      if brew list --cask "$pkg" >/dev/null 2>&1; then
+        ask_upgrade_all
+        brew_upgrade "$pkg" true
+      elif is_app_installed "Docker"; then
+        info "  Docker Desktop already installed (direct), skipping"
+        continue
+      else
+        info "  installing $pkg"
+        brew install --cask "$pkg" && success "  $pkg installed" || fail "  $pkg failed"
+      fi
+    else
+      if brew list --cask "$pkg" >/dev/null 2>&1; then
+        ask_upgrade_all
+        brew_upgrade "$pkg" true
+      else
+        info "  installing $pkg"
+        brew install --cask "$pkg" && success "  $pkg installed" || fail "  $pkg failed"
+      fi
+    fi
+  done
+}
+
+install_gemini_cli() {
+  info "Install Gemini CLI"
+  if brew list gemini-cli >/dev/null 2>&1; then
+    ask_upgrade_all
+    brew_upgrade "gemini-cli" false
+  else
+    brew install gemini-cli && success "  gemini-cli installed" || fail "  gemini-cli failed"
+  fi
+}
+
+install_mole() {
+  info "Install mole"
+  if brew list mole >/dev/null 2>&1; then
+    ask_upgrade_all
+    brew_upgrade "mole" false
+  else
+    brew install mole && success "  mole installed" || fail "  mole failed"
+  fi
+}
+
+install_reattach_to_user_namespace() {
+  info "Install reattach-to-user-namespace"
+  if brew list reattach-to-user-namespace >/dev/null 2>&1; then
+    ask_upgrade_all
+    brew_upgrade "reattach-to-user-namespace" false
+  else
+    brew install reattach-to-user-namespace && success "  reattach-to-user-namespace installed" || fail "  reattach-to-user-namespace failed"
+  fi
 }
 
 # Run installations in order
@@ -334,12 +459,18 @@ install_tmux_conf_local
 install_homebrew
 install_oh_my_zsh
 install_pyenv
-install_pyenv_virtualenv
 setup_python_env
 install_jenv
 install_nvm
 install_tmux_plugins
 install_via_brew
+install_brew_packages
+install_brew_casks
+install_reattach_to_user_namespace
+install_homebrew_taps
+install_ccswitch
+install_gemini_cli
+install_mole
 
 echo ''
 echo '  All installed!'

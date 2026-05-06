@@ -83,15 +83,12 @@ plugins=(
     z
     poetry
     pyenv
-    autoswitch_virtualenv
     history-substring-search
     docker
     docker-compose
     npm
     nvm
     pip
-    virtualenv
-    virtualenvwrapper
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -180,12 +177,6 @@ fi
 #___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"
 #___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
 
-# AsyncAPI CLI Autocomplete
-
-ASYNCAPI_AC_ZSH_SETUP_PATH="$HOME/Library/Caches/@asyncapi/cli/autocomplete/zsh_setup" && test -f $ASYNCAPI_AC_ZSH_SETUP_PATH && source $ASYNCAPI_AC_ZSH_SETUP_PATH; # asyncapi autocomplete setup
-
-
-
 [ -s "$HOME/.web3j/source.sh" ] && source "$HOME/.web3j/source.sh"
 
 # pnpm
@@ -218,3 +209,7 @@ function proxy_off(){
     unset http_proxy https_proxy
     echo -e "终端代理已关闭。"
 }
+
+
+# set default user for local
+export DEFAULT_USER="$USER"
