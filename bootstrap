@@ -3,7 +3,14 @@
 # bootstrap installs things.
 # Idempotent: safe to re-run if interrupted.
 
-DOTFILES_ROOT="`pwd`"
+# Resolve script path (handles symlinks)
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+    DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+    SOURCE="$( readlink "$SOURCE" )"
+    [ -n "$DIR" ] && SOURCE="$DIR/$SOURCE"
+done
+DOTFILES_ROOT="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 echo ''
 
@@ -41,14 +48,14 @@ action_upgrade_brew_all=false
 action_no_all=false
 
 setup_gitconfig () {
-  if ! [ -f git/gitconfig.symlink ]; then
+  if ! [ -f "$DOTFILES_ROOT/git/gitconfig.symlink" ]; then
     info 'setup gitconfig'
     user ' - What is your github author name?'
     read -e git_authorname
     user ' - What is your github author email?'
     read -e git_authoremail
 
-    sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" git/gitconfig.symlink.example > git/gitconfig.symlink
+    sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" "$DOTFILES_ROOT/git/gitconfig.symlink.example" > "$DOTFILES_ROOT/git/gitconfig.symlink"
     success 'gitconfig'
   else
     info 'gitconfig already exists, skipping'
@@ -442,6 +449,48 @@ install_mole() {
   fi
 }
 
+install_emacs_spacemacs() {
+  info "Install Emacs with Spacemacs"
+
+  # Check if emacs is installed
+  if command -v emacs >/dev/null 2>&1; then
+    ask_upgrade_all
+    if [ "$action_upgrade_brew_all" == "true" ]; then
+      brew upgrade emacs && success "  emacs upgraded" || fail "  emacs upgrade failed"
+    elif [ "$action_no_all" == "true" ]; then
+      success "  emacs skipped"
+    else
+      info "  Emacs already installed"
+      user "  - Upgrade emacs? [y]es, [n]o, [N]o for all: "
+      read -n 1 confirm 2>/dev/null || confirm="n"
+      echo ''
+      case "$confirm" in
+        y|Y) brew upgrade emacs && success "  emacs upgraded" || fail "  emacs upgrade failed" ;;
+        N) action_no_all=true; success "  emacs skipped" ;;
+        *) success "  emacs skipped" ;;
+      esac
+    fi
+  else
+    brew install emacs && success "  emacs installed" || { fail "  emacs failed"; return 1; }
+  fi
+
+  # Initialize Spacemacs if not already configured
+  if [ ! -d "$HOME/.emacs.d" ]; then
+    info "  Cloning Spacemacs"
+    git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d --branch develop --depth 1 && success "  spacemacs cloned" || { fail "  spacemacs clone failed"; return 1; }
+  else
+    info "  Spacemacs already configured"
+    success "  spacemacs skipped"
+  fi
+
+  # Link spacemacs.el config with Tsinghua ELPA mirror
+  if [ -f "$DOTFILES_ROOT/spacemacs.el" ]; then
+    ln -sf "$DOTFILES_ROOT/spacemacs.el" "$HOME/.spacemacs.el" && success "  spacemacs.el linked" || fail "  spacemacs.el link failed"
+  fi
+
+  success "  emacs + spacemacs ready"
+}
+
 install_reattach_to_user_namespace() {
   info "Install reattach-to-user-namespace"
   if brew list reattach-to-user-namespace >/dev/null 2>&1; then
@@ -466,6 +515,7 @@ install_tmux_plugins
 install_via_brew
 install_brew_packages
 install_brew_casks
+install_emacs_spacemacs
 install_reattach_to_user_namespace
 install_homebrew_taps
 install_ccswitch
