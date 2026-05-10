@@ -328,7 +328,7 @@ is_app_installed() {
 install_via_brew() {
   info "Install packages via brew"
 
-  for pkg in z git-extras newman; do
+  for pkg in z git-extras newman tree; do
     if brew list "$pkg" >/dev/null 2>&1; then
       ask_upgrade_all
       brew_upgrade "$pkg" false
