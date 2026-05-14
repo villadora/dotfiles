@@ -310,6 +310,24 @@ install_tmux_plugins() {
     ask_upgrade_all
     git_upgrade "$HOME/.tmux/plugins/tpm" "tpm"
   fi
+
+  # Install tmux plugins
+  local tpm_plugins=(
+    "tmux-resurrect"
+    "tmux-continuum"
+    "tmux-open"
+    "tmux-yank"
+    "tmux-logging"
+  )
+
+  for plugin in "${tpm_plugins[@]}"; do
+    if ! [ -d "$HOME/.tmux/plugins/$plugin" ]; then
+      info "  Install $plugin"
+      git clone "https://github.com/tmux-plugins/$plugin" "$HOME/.tmux/plugins/$plugin" --quiet && success "  $plugin" || fail "  $plugin"
+    else
+      success "  $plugin already installed"
+    fi
+  done
 }
 
 # Check if app is installed (works for both Homebrew and direct downloads)
@@ -501,8 +519,29 @@ install_reattach_to_user_namespace() {
   fi
 }
 
+install_git_hooks() {
+  info "Setup git hooks"
+
+  local hooks_dir="$HOME/.config/git/hooks"
+  local hooks_target="$DOTFILES_ROOT/git/hooks"
+
+  if [ -L "$hooks_dir" ]; then
+    local current_target="$(readlink -f "$hooks_dir")"
+    if [ "$current_target" = "$(readlink -f "$hooks_target")" ]; then
+      success "  git hooks already linked"
+      return 0
+    fi
+    rm -f "$hooks_dir"
+  elif [ -d "$hooks_dir" ]; then
+    rm -rf "$hooks_dir"
+  fi
+
+  ln -sf "$hooks_target" "$hooks_dir" && success "  git hooks linked" || { fail "  git hooks link failed"; return 1; }
+}
+
 # Run installations in order
 setup_gitconfig
+install_git_hooks
 install_dotfiles
 install_tmux_conf_local
 install_homebrew

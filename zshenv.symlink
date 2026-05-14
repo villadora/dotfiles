@@ -16,4 +16,4 @@ fi
 
 export HAPPY_SERVER_URL=https://happy.villagao.top
 
-. "$HOME/.cargo/env"
+[ -s "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
