@@ -64,7 +64,7 @@ MSG=$(echo "$DIFF" | claude -p \
 feat(auth): 添加 JWT 刷新 token 功能
 fix(api): 修复用户列表分页计算错误
 refactor(utils): 提取日期格式化为独立函数" \
-  --bare --max-turns 1 2>/dev/null)
+  --bare --max-turns 5 2>/dev/null)
 
 # 生成失败时静默退出，让用户自己写
 if [ -z "$MSG" ]; then
