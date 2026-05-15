@@ -548,6 +548,9 @@ install_git_hooks() {
     rm -rf "$hooks_dir"
   fi
 
+  # Create parent directory if it doesn't exist
+  mkdir -p "$(dirname "$hooks_dir")"
+
   ln -sf "$hooks_target" "$hooks_dir" && success "  git hooks linked" || { fail "  git hooks link failed"; return 1; }
 }
 
