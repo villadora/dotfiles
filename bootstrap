@@ -55,7 +55,11 @@ setup_gitconfig () {
     user ' - What is your github author email?'
     read -e git_authoremail
 
-    sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" "$DOTFILES_ROOT/git/gitconfig.symlink.example" > "$DOTFILES_ROOT/git/gitconfig.symlink"
+    sed -e "s/AUTHORNAME/$git_authorname/g" \
+        -e "s/AUTHOREMAIL/$git_authoremail/g" \
+        -e "s|HOME|$HOME|g" \
+        -e "s|HOOKSPATH|$HOME/.config/git/hooks|g" \
+        "$DOTFILES_ROOT/git/gitconfig.symlink.example" > "$DOTFILES_ROOT/git/gitconfig.symlink"
     success 'gitconfig'
   else
     info 'gitconfig already exists, skipping'

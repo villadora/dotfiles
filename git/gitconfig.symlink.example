@@ -1,6 +1,6 @@
 [user]
-	name = villadora
-	email = jky239@gmail.com
+	name = AUTHORNAME
+	email = AUTHOREMAIL
 [alias]
 	last = cat-file commit HEAD
 	find = lost = fsck --lost-found
@@ -28,8 +28,8 @@
 [core]
 	editor = emacsclient -nw
 	autocrlf = input
-	excludesfile = /Users/villadora/.gitignore_global
-	hooksPath = /Users/villadora/.config/git/hooks
+	excludesfile = HOME/.gitignore_global
+	hooksPath = HOOKSPATH
 [color]
 	branch = auto
 	diff = auto
