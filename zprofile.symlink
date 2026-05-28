@@ -4,3 +4,7 @@ source ~/.dotfiles/profile_common.sh
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 
+
+
+# Added by Antigravity CLI installer
+export PATH="$HOME/.local/bin:$PATH"

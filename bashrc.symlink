@@ -103,3 +103,7 @@ export PYTHONPATH=$PYTHONPATH:$PWD
 
 [ -s "$HOME/.web3j/source.sh" ] && source "$HOME/.web3j/source.sh"
 . "$HOME/.cargo/env"
+
+
+# Added by Antigravity CLI installer
+export PATH="$HOME/.local/bin:$PATH"

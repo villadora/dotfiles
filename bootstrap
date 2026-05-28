@@ -232,6 +232,18 @@ install_oh_my_zsh() {
   fi
 }
 
+install_zsh_autoswitch_virtualenv() {
+  local plugin_dir="$HOME/.oh-my-zsh/custom/plugins/autoswitch_virtualenv"
+  if ! [ -d "$plugin_dir" ]; then
+    info "Install autoswitch_virtualenv"
+    git clone https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git "$plugin_dir" --quiet
+    success 'autoswitch_virtualenv'
+  else
+    ask_upgrade_all
+    git_upgrade "$plugin_dir" "autoswitch_virtualenv"
+  fi
+}
+
 install_pyenv() {
   if ! [ -d "$HOME/.pyenv" ]; then
     info "Install pyenv"
@@ -546,6 +558,7 @@ install_dotfiles
 install_tmux_conf_local
 install_homebrew
 install_oh_my_zsh
+install_zsh_autoswitch_virtualenv
 install_pyenv
 setup_python_env
 install_jenv

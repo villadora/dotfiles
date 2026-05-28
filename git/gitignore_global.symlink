@@ -42,3 +42,5 @@ local_tasks/
 local_docs/
 pubqa.sh
 skills-lock.json
+.mcp.json
+.mcp.json.bak
