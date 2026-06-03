@@ -39,6 +39,58 @@ if [ -z "$DIFF" ]; then
     exit 0
 fi
 
+MAX_DIFF_LINES=500
+
+# Truncate diff if too large: keep only top changed files within limit
+DIFF_LINES=$(echo "$DIFF" | wc -l | tr -d ' ')
+if [ "$DIFF_LINES" -gt "$MAX_DIFF_LINES" ]; then
+    echo "📊 Diff too large (${DIFF_LINES} lines), truncating to top changed files..."
+
+    DIFF=$(echo "$DIFF" | awk -v max="$MAX_DIFF_LINES" -v total_lines="$DIFF_LINES" '
+        /^diff --git / {
+            if (nfiles > 0) sizes[nfiles - 1] = nlines
+            bufs[nfiles] = ""
+            nlines = 0
+            nfiles++
+        }
+        {
+            bufs[nfiles - 1] = bufs[nfiles - 1] $0 "\n"
+            nlines++
+        }
+        END {
+            if (nfiles > 0) sizes[nfiles - 1] = nlines
+
+            # Sort indices by size descending (selection sort)
+            for (i = 0; i < nfiles; i++) order[i] = i
+            for (i = 0; i < nfiles; i++)
+                for (j = i + 1; j < nfiles; j++)
+                    if (sizes[order[i]] < sizes[order[j]]) {
+                        tmp = order[i]; order[i] = order[j]; order[j] = tmp
+                    }
+
+            # Greedily pick files up to max lines (always include at least 1)
+            total = 0
+            picked = 0
+            for (k = 0; k < nfiles; k++) {
+                i = order[k]
+                if (total + sizes[i] <= max || picked == 0) {
+                    include[i] = 1
+                    total += sizes[i]
+                    picked++
+                }
+            }
+
+            # Output selected files in original order
+            for (i = 0; i < nfiles; i++) {
+                if (include[i]) printf "%s", bufs[i]
+            }
+
+            if (total < total_lines)
+                printf "\n... (truncated, showing %d/%d lines, %d/%d files)\n", total, total_lines, picked, nfiles
+        }
+    ')
+fi
+
 # Read language configuration: git config commit.language (zh|en), default to en
 LANG_CONFIG=$(git config commit.language 2>/dev/null || echo "en")
 
@@ -93,7 +145,20 @@ Rules:
     echo "🌐 Using English prompt for commit message"
 fi
 
-USER_PROMPT="Generate a commit message for the following staged changes:\n\n\`\`\`diff\n${DIFF}\n\`\`\`"
+# Get full list of changed files (always complete, regardless of diff truncation)
+CHANGED_FILES=$(git diff --cached --name-status)
+
+USER_PROMPT="Generate a commit message for the following staged changes.
+
+Changed files:
+\`\`\`
+${CHANGED_FILES}
+\`\`\`
+
+Diff:
+\`\`\`diff
+${DIFF}
+\`\`\`"
 
 # Call Claude Code CLI to generate commit message
 GENERATED_MESSAGE=$(echo "$USER_PROMPT" | claude -p "$SYSTEM_PROMPT" --allowedTools "" 2>/dev/null)
