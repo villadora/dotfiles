@@ -517,9 +517,11 @@ install_emacs_spacemacs() {
     success "  spacemacs skipped"
   fi
 
-  # Link spacemacs.el config with Tsinghua ELPA mirror
-  if [ -f "$DOTFILES_ROOT/spacemacs.el" ]; then
-    ln -sf "$DOTFILES_ROOT/spacemacs.el" "$HOME/.spacemacs.el" && success "  spacemacs.el linked" || fail "  spacemacs.el link failed"
+  # spacemacs config is managed via install_dotfiles (spacemacs.symlink -> ~/.spacemacs)
+  # Clean up legacy link if present
+  if [ -L "$HOME/.spacemacs.el" ]; then
+    rm -f "$HOME/.spacemacs.el"
+    success "  removed legacy .spacemacs.el link"
   fi
 
   success "  emacs + spacemacs ready"
