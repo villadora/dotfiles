@@ -1,0 +1,232 @@
+#!/bin/bash
+# Git pre-commit hook - Security risk detection
+# ==========================================
+# Two-phase risk detection:
+#   Phase 1: Rule-based pattern scanning (fast, local)
+#   Phase 2: Claude AI deep analysis (if Phase 1 passes)
+#
+# Bypass: git commit --no-verify
+
+set -euo pipefail
+
+RED='\033[0;31m'
+YELLOW='\033[0;33m'
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+# Collect staged files (added/copied/modified/renamed)
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR 2>/dev/null || true)
+if [ -z "$STAGED_FILES" ]; then
+    exit 0
+fi
+
+DIFF=$(git diff --cached --no-color --no-ext-diff 2>/dev/null || true)
+if [ -z "$DIFF" ]; then
+    exit 0
+fi
+
+BLOCK_COUNT=0
+BLOCK_REASONS=""
+
+add_blocker() {
+    BLOCK_COUNT=$((BLOCK_COUNT + 1))
+    BLOCK_REASONS="${BLOCK_REASONS}
+  ${RED}✗${NC} $1"
+}
+
+# ============================================================================
+# Phase 1: Rule-based scanning
+# ============================================================================
+echo -e "${CYAN}🔒 Phase 1: Rule-based security scanning...${NC}"
+
+# --- 1a. Risky file names ---
+RISKY_FILE_PATTERNS='\.(env|pem|key|p12|pfx|jks|keystore|secret|credentials|token)$|\.env\.|id_rsa|id_ed25519|\.htpasswd|service.account\.json|\.npmrc|\.dockercfg|docker-compose\.secret'
+
+RISKY_FILES=$(echo "$STAGED_FILES" | grep -iE "$RISKY_FILE_PATTERNS" || true)
+if [ -n "$RISKY_FILES" ]; then
+    while IFS= read -r f; do
+        add_blocker "敏感文件名: $f — 不应提交到仓库，请加入 .gitignore"
+    done <<<"$RISKY_FILES"
+fi
+
+# --- 1b. Large binary / archive files ---
+BINARY_FILES=$(echo "$STAGED_FILES" | grep -iE '\.(zip|tar|gz|bz2|xz|7z|rar|jar|war|ear|db|sqlite3?|dump)$' || true)
+if [ -n "$BINARY_FILES" ]; then
+    while IFS= read -r f; do
+        add_blocker "二进制/归档文件: $f — 请确认是否有必要提交"
+    done <<<"$BINARY_FILES"
+fi
+
+# --- 1c. Secret patterns in diff content ---
+# Only scan added lines (+), skip file headers (+++)
+ADDED_LINES=$(echo "$DIFF" | grep -n '^+' | grep -v '^+++' || true)
+
+if [ -n "$ADDED_LINES" ]; then
+    SECRET_RULES=(
+        # AWS Access Key
+        'AKIA[0-9A-Z]{16}'
+        # GitHub / GitLab tokens
+        '(ghp|gho|ghu|ghs|ghr|glpat)-[A-Za-z0-9_]{36,}'
+        # Slack tokens
+        'xox[bporas]-[A-Za-z0-9\-]{10,}'
+        # Private key PEM
+        '-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----'
+        # Generic: key/token/secret/password = "some_long_value"
+        '(?i)(api[_-]?(key|secret|token)|secret[_-]?key|access[_-]?token|auth[_-]?token|client[_-]?secret)\s*[:=]\s*["\x27][A-Za-z0-9_/\+=\-]{16,}["\x27]'
+        # Generic password assignment
+        '(?i)(password|passwd|pwd)\s*[:=]\s*["\x27][^\x27"]{8,}["\x27]'
+        # Connection strings with embedded credentials
+        '(?i)(mysql|postgres|redis|mongodb|amqp):\/\/[^:]+:[^@]+@'
+        # Stripe keys
+        '(sk|pk)_(live|test)_[A-Za-z0-9]{20,}'
+    )
+
+    for pattern in "${SECRET_RULES[@]}"; do
+        MATCHES=$(echo "$ADDED_LINES" | grep -P "$pattern" 2>/dev/null || true)
+        if [ -n "$MATCHES" ]; then
+            while IFS= read -r match; do
+                FILE_LINE=$(echo "$match" | cut -d: -f1)
+                # Find which file this line belongs to
+                # (grep -n gives absolute line number in diff)
+                LINE_CONTENT=$(echo "$match" | cut -d: -f2- | sed 's/^+//' | head -c 100)
+                # Mask the actual secret value
+                MASKED=$(echo "$LINE_CONTENT" | sed -E 's/(["\x27])[A-Za-z0-9_/\+=\-]{8,}(["\x27])/\1****\2/g')
+                add_blocker "硬编码密钥: ${MASKED}"
+            done <<<"$MATCHES"
+        fi
+    done
+fi
+
+# --- Phase 1 result ---
+if [ "$BLOCK_COUNT" -gt 0 ]; then
+    echo ""
+    echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${RED}❌ 检测到 $BLOCK_COUNT 个风险项，提交已阻止:${NC}"
+    echo -e "$BLOCK_REASONS"
+    echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${YELLOW}💡 修复后重新提交，或使用 git commit --no-verify 跳过检查${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}  ✓ 规则扫描通过${NC}"
+
+# ============================================================================
+# Phase 2: Claude AI deep analysis
+# ============================================================================
+echo -e "${CYAN}🤖 Phase 2: Claude AI 深度风险分析...${NC}"
+
+SYSTEM_PROMPT='You are a security reviewer analyzing a git diff for risks before commit.
+
+## What to detect
+1. **Hardcoded secrets**: API keys, tokens, passwords, connection strings, private keys — even if obfuscated or split across lines.
+2. **Credential leaks**: .env values, config files with real credentials, base64-encoded secrets.
+3. **Dangerous patterns**: SQL injection, command injection, path traversal, unsafe deserialization, disabled security checks (TLS verify off, CORS wildcard, etc.).
+4. **Sensitive data exposure**: PII, internal URLs, internal IP addresses, infrastructure details.
+5. **Risk files**: .env, .pem, .key, keystore files, service account JSON being committed.
+
+## Output format
+Return ONLY a JSON object with this exact structure, no markdown fences:
+{
+  "risk_level": "safe" | "warning" | "block",
+  "findings": [
+    {
+      "severity": "blocker" | "warning" | "nit",
+      "file": "path/to/file",
+      "line": 42,
+      "title": "short title",
+      "description": "what the problem is and how to fix it"
+    }
+  ]
+}
+
+## Rules
+- "risk_level" = "block" if ANY blocker severity finding exists, "warning" if any warning, otherwise "safe".
+- ONLY report real issues visible in the diff. No speculation.
+- If clean, return {"risk_level": "safe", "findings": []}.
+- Be concise. Return ONLY the JSON object.'
+
+# Truncate diff if too large
+MAX_SIZE=60000
+if [ ${#DIFF} -gt $MAX_SIZE ]; then
+    DIFF="${DIFF:0:$MAX_SIZE}
+
+... (diff truncated, ${#DIFF} bytes total) ..."
+fi
+
+USER_PROMPT="Analyze this staged diff for security risks:\n\n\`\`\`diff\n${DIFF}\n\`\`\`"
+
+TMPFILE=$(mktemp)
+# shellcheck disable=SC2064
+trap "rm -f '$TMPFILE'" EXIT
+
+RESULT=$(echo -e "$USER_PROMPT" | claude -p "$SYSTEM_PROMPT" --allowedTools "" 2>/dev/null || true)
+
+if [ -z "$RESULT" ]; then
+    echo -e "${YELLOW}  ⚠ Claude 分析跳过（CLI 不可用），仅通过规则扫描${NC}"
+    exit 0
+fi
+
+# Extract JSON (strip any markdown fences Claude might add)
+CLEAN_RESULT=$(echo "$RESULT" | sed -n '/^{/,/^}/p' | head -1)
+if [ -z "$CLEAN_RESULT" ]; then
+    CLEAN_RESULT="$RESULT"
+fi
+
+# Parse risk_level
+RISK_LEVEL=$(echo "$CLEAN_RESULT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('risk_level','safe'))" 2>/dev/null || echo "safe")
+
+if [ "$RISK_LEVEL" = "safe" ]; then
+    echo -e "${GREEN}  ✓ Claude AI 分析通过，无风险${NC}"
+    exit 0
+fi
+
+# Parse and display findings
+echo ""
+echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${RED}❌ Claude AI 发现安全风险:${NC}"
+echo ""
+
+echo "$CLEAN_RESULT" | python3 -c "
+import sys, json
+try:
+    data = json.load(sys.stdin)
+except:
+    print('  (无法解析 AI 输出)')
+    sys.exit(0)
+
+level = data.get('risk_level', 'safe')
+findings = data.get('findings', [])
+
+for f in findings:
+    sev = f.get('severity', 'unknown')
+    icon = '✗' if sev == 'blocker' else '⚠' if sev == 'warning' else '·'
+    file_info = f.get('file', '')
+    line_info = f.get('line', '')
+    loc = f'{file_info}:{line_info}' if file_info and line_info else file_info or ''
+    title = f.get('title', '')
+    desc = f.get('description', '')
+    print(f'  {icon} [{sev}] {title}')
+    if loc:
+        print(f'    📄 {loc}')
+    if desc:
+        print(f'    {desc}')
+    print()
+" 2>/dev/null || echo "  $CLEAN_RESULT"
+
+echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${YELLOW}💡 修复后重新提交，或使用 git commit --no-verify 跳过检查${NC}"
+
+if [ "$RISK_LEVEL" = "block" ]; then
+    exit 1
+else
+    # warning level — ask user
+    echo -ne "${YELLOW}  是否继续提交？[y/N] ${NC}"
+    read -r REPLY
+    if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
+        echo -e "${RED}  提交已取消${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}  继续提交...${NC}"
+    exit 0
+fi

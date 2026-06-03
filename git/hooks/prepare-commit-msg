@@ -1,80 +1,107 @@
 #!/bin/bash
-# prepare-commit-msg
-# 如果用户没有写 commit message，自动用 claude -p 生成一条
+# Git prepare-commit-msg hook - with Claude Code CLI
+# ==========================================
+# This hook uses Claude Code CLI to automatically generate commit messages
+# when using `git commit` without providing a message.
 #
-# 安装：
-#   cp prepare-commit-msg .git/hooks/prepare-commit-msg
+# USAGE:
+#   git commit                  - Generates commit message via Claude Code
+#   git commit -m "message"     - Skips generation, uses provided message
+#   git commit --amend          - Skips generation, amends previous commit
+#
+# CONFIGURATION:
+#   Set language for commit message generation:
+#     git config commit.language zh    - Use Chinese prompt
+#     git config commit.language en    - Use English prompt (default)
+#     git config --global commit.language zh  - Global Chinese setting
+#
+# INSTALLATION:
+#   cp prepare-commit-msg .git/hooks/
 #   chmod +x .git/hooks/prepare-commit-msg
 #
-# 团队共享：
-#   cp prepare-commit-msg .githooks/prepare-commit-msg
-#   chmod +x .githooks/prepare-commit-msg
-#   git config core.hooksPath .githooks
+# Gitmoji Convention:
+#   This hook generates commit messages following the Gitmoji convention.
+#   https://gitmoji.dev
 
-COMMIT_MSG_FILE="$1"   # git 传入的临时文件路径
-COMMIT_SOURCE="$2"     # commit 来源：message / template / merge / squash / commit
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
 
-# ── 跳过条件 ──────────────────────────────────────────────────────────────
-# merge / squash / cherry-pick 等有自动消息的场景，不覆盖
-if [ "$COMMIT_SOURCE" = "merge" ] || \
-   [ "$COMMIT_SOURCE" = "squash" ] || \
-   [ "$COMMIT_SOURCE" = "commit" ]; then
-  exit 0
+# Skip if commit message is provided via -m flag or if amending
+if [ "$COMMIT_SOURCE" = "message" ] || [ "$COMMIT_SOURCE" = "squash" ] || [ "$COMMIT_SOURCE" = "merge" ]; then
+    exit 0
 fi
 
-# 读取文件内容，去掉注释行（# 开头）和空行
-EXISTING=$(grep -v '^#' "$COMMIT_MSG_FILE" | grep -v '^[[:space:]]*$')
+# Get the staged changes diff
+DIFF=$(git diff --cached)
 
-# 用户已经写了内容，不覆盖
-if [ -n "$EXISTING" ]; then
-  exit 0
+# If no staged changes, exit
+if [ -z "$DIFF" ]; then
+    exit 0
 fi
 
-# 没有暂存文件时跳过
-STAGED=$(git diff --cached --name-only 2>/dev/null)
-if [ -z "$STAGED" ]; then
-  exit 0
-fi
+# Read language configuration: git config commit.language (zh|en), default to en
+LANG_CONFIG=$(git config commit.language 2>/dev/null || echo "en")
 
-# claude 不存在时静默跳过，不影响正常 commit
-# unset CLAUDECODE 避免嵌套 Claude Code session 崩溃
-if ! env -u CLAUDECODE command -v claude &>/dev/null; then
-  exit 0
-fi
+# Common Gitmoji mappings (shared between languages)
+GITMOJI_RULES="Common gitmoji mappings:
+   - ✨ feat: New feature
+   - 🐛 fix: Bug fix
+   - 📝 docs: Documentation
+   - 💄 style: Code style (formatting, semicolons, etc)
+   - ♻️ refactor: Code refactoring
+   - ⚡️ perf: Performance improvement
+   - ✅ test: Adding/fixing tests
+   - 🔧 build: Build system/dependencies
+   - 👷 ci: CI configuration
+   - 🔨 chore: General chores
+   - ⏪️ revert: Reverting changes
+   - 🔒️ security: Security improvements
+   - 🚑️ critical: Critical hotfix
+   - 🎨 art: Structure/code improvements
+   - 🚀 deploy: Deployment
+   - 🗑️ trash: Removing code/files"
 
-# ── 生成 commit message ───────────────────────────────────────────────────
-DIFF=$(git diff --cached 2>/dev/null)
-
-# diff 太大时只用 stat，避免超出 token
-DIFF_SIZE=$(echo "$DIFF" | wc -c)
-if [ "$DIFF_SIZE" -gt 20000 ]; then
-  DIFF=$(git diff --cached --stat 2>/dev/null)
-fi
-
-MSG=$(echo "$DIFF" | env -u CLAUDECODE claude -p \
-  "根据以下 git diff 生成一条 commit message。
+# Select prompt based on language configuration
+if [ "$LANG_CONFIG" = "zh" ] || [ "$LANG_CONFIG" = "chinese" ]; then
+    SYSTEM_PROMPT="你是一个 commit 消息生成器。根据 Gitmoji 规范（https://gitmoji.dev）生成 commit 消息。
 
 规则：
-- 使用 Conventional Commits 格式：<type>(<scope>): <subject>
-- type 从以下选择：feat / fix / docs / style / refactor / test / chore
-- subject 用中文，动词开头，不超过 50 字
-- 如果变更较复杂，在空行后加 1-3 行 body 说明（可选）
-- 只输出 commit message 本身，不要任何解释或代码块
+1. 使用最能代表更改类型的 gitmoji emoji 作为前缀
+2. 遵循格式：<emoji> <type>(<scope>): <description>
+3. ${GITMOJI_RULES}
+4. 第一行保持在 50 个字符以内
+5. 如有需要，在正文添加详细描述
+6. 使用祈使语气（\"添加\" 而不是 \"已添加\"）
+7. 关联相关 issue 编号（#123）
+8. 只输出 commit 消息，不要解释或使用 markdown
+9. 如果有多个更改，使用最重要的 emoji
+10. 使用中文描述"
+    echo "🌐 使用中文 prompt 生成 commit 消息"
+else
+    SYSTEM_PROMPT="You are a commit message generator. Generate commit messages following the Gitmoji convention (https://gitmoji.dev).
 
-示例：
-feat(auth): 添加 JWT 刷新 token 功能
-fix(api): 修复用户列表分页计算错误
-refactor(utils): 提取日期格式化为独立函数" \
-  --max-turns 5 2>/dev/null)
-
-# 生成失败时静默退出，让用户自己写
-if [ -z "$MSG" ]; then
-  exit 0
+Rules:
+1. Use a gitmoji emoji prefix that best represents the change type
+2. Follow format: <emoji> <type>(<scope>): <description>
+3. ${GITMOJI_RULES}
+4. Keep first line under 50 characters
+5. Add detailed description in body if needed
+6. Use imperative mood (\"add\" not \"added\")
+7. Reference issue numbers when relevant (#123)
+8. Output ONLY the commit message, no explanations or markdown
+9. If there are multiple changes, use the most significant emoji"
+    echo "🌐 Using English prompt for commit message"
 fi
 
-# ── 写入文件 ─────────────────────────────────────────────────────────────
-# 把生成的消息写到文件开头，原有的 git 注释追加在后面
-ORIGINAL=$(cat "$COMMIT_MSG_FILE")
-printf "%s\n\n%s\n" "$MSG" "$ORIGINAL" > "$COMMIT_MSG_FILE"
+USER_PROMPT="Generate a commit message for the following staged changes:\n\n\`\`\`diff\n${DIFF}\n\`\`\`"
 
-echo "💡 已预填 commit message，保存退出即可（修改编辑器内容可覆盖）"
+# Call Claude Code CLI to generate commit message
+GENERATED_MESSAGE=$(echo "$USER_PROMPT" | claude -p "$SYSTEM_PROMPT" --allowedTools "" 2>/dev/null)
+
+if [ $? -eq 0 ] && [ -n "$GENERATED_MESSAGE" ]; then
+    # Write the generated message to the commit message file
+    echo "$GENERATED_MESSAGE" > "$COMMIT_MSG_FILE"
+    echo "✨ Commit message generated by Claude Code"
+else
+    echo "⚠️ Failed to generate commit message, using default"
+fi
